@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.Arrays;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -21,14 +23,25 @@ public class MainActivity extends AppCompatActivity {
 
         LinearLayout view = (LinearLayout) findViewById(R.id.main_layout);
 
+        LineGraphView lineGraphView = new LineGraphView(getApplicationContext(),
+                100,
+                Arrays.asList("x", "y", "z"));
+        view.addView(lineGraphView);
+
         TextView lightSensorDisplay = new TextView(getApplicationContext());
         lightSensorDisplay.setTextColor(Color.WHITE);
         view.addView(lightSensorDisplay);
 
         LightSensorEventListener lightSensorEventListener = new LightSensorEventListener(lightSensorDisplay);
+        AccelerometerEventListener accelerometerEventListener = new AccelerometerEventListener(lineGraphView);
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensorManager.registerListener(lightSensorEventListener,
                 sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT),
                 SensorManager.SENSOR_DELAY_NORMAL);
+
+        sensorManager.registerListener(accelerometerEventListener,
+                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_NORMAL);
+
     }
 }
