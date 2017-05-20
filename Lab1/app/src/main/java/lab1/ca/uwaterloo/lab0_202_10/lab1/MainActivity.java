@@ -6,13 +6,13 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.Arrays;
+
+import lab1.ca.uwaterloo.lab0_202_10.lab1.Listeners.AccelerometerEventListener;
+import lab1.ca.uwaterloo.lab0_202_10.lab1.Listeners.LightSensorEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,12 +28,25 @@ public class MainActivity extends AppCompatActivity {
                 Arrays.asList("x", "y", "z"));
         view.addView(lineGraphView);
 
+        TextView accelerometerDisplay = new TextView(getApplicationContext());
+        TextView accelerometerMax = new TextView(getApplicationContext());
         TextView lightSensorDisplay = new TextView(getApplicationContext());
+        TextView lightSensorMax = new TextView(getApplicationContext());
+        accelerometerDisplay.setTextColor(Color.WHITE);
+        accelerometerMax.setTextColor(Color.WHITE);
         lightSensorDisplay.setTextColor(Color.WHITE);
-        view.addView(lightSensorDisplay);
+        lightSensorMax.setTextColor(Color.WHITE);
 
-        LightSensorEventListener lightSensorEventListener = new LightSensorEventListener(lightSensorDisplay);
-        AccelerometerEventListener accelerometerEventListener = new AccelerometerEventListener(lineGraphView);
+        view.addView(accelerometerDisplay);
+        view.addView(accelerometerMax);
+        view.addView(lightSensorDisplay);
+        view.addView(lightSensorMax);
+
+        LightSensorEventListener lightSensorEventListener = new LightSensorEventListener(lightSensorDisplay,
+                lightSensorMax, this);
+        AccelerometerEventListener accelerometerEventListener = new AccelerometerEventListener(lineGraphView,
+                accelerometerDisplay, accelerometerMax, this);
+
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensorManager.registerListener(lightSensorEventListener,
                 sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT),
@@ -42,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
         sensorManager.registerListener(accelerometerEventListener,
                 sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                 SensorManager.SENSOR_DELAY_NORMAL);
+
+        lightSensorEventListener.start();
+        accelerometerEventListener.start();
 
     }
 }
