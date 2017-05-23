@@ -91,9 +91,10 @@ public class AccelerometerEventListener extends EventHistory<Point3f> implements
             e.printStackTrace();
             return;
         }
-        Point3f[] points = this.getDataPoints();
-        for (Point3f point : points) {
-            printWriter.println(String.format("%f,%f,%f", point.x, point.y, point.z));
+        Object[] points = this.getDataPoints();
+        for (Object point : points) {
+            Point3f po = (Point3f) point;
+            printWriter.println(String.format("%f,%f,%f", po.x, po.y, po.z));
         }
     }
 }

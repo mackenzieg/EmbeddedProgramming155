@@ -74,9 +74,10 @@ public class LightSensorEventListener extends EventHistory<Float> implements Sen
             e.printStackTrace();
             return;
         }
-        Float[] points = this.getDataPoints();
-        for (Float point : points) {
-            printWriter.println(String.format("%f", point));
+        Object[] points = this.getDataPoints();
+        for (Object point : points) {
+            Float po = (Float) point;
+            printWriter.println(String.format("%f", po));
         }
     }
 }

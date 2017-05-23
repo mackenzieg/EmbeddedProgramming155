@@ -6,6 +6,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -32,6 +33,12 @@ public class MainActivity extends AppCompatActivity {
         TextView accelerometerMax = new TextView(getApplicationContext());
         TextView lightSensorDisplay = new TextView(getApplicationContext());
         TextView lightSensorMax = new TextView(getApplicationContext());
+
+        Button accelerometerWrite = new Button(getApplicationContext());
+        accelerometerWrite.setText("Write Accelerometer Data");
+        Button lightWrite = new Button(getApplicationContext());
+        lightWrite.setText("Write Light Sensor Data");
+
         accelerometerDisplay.setTextColor(Color.WHITE);
         accelerometerMax.setTextColor(Color.WHITE);
         lightSensorDisplay.setTextColor(Color.WHITE);
@@ -39,8 +46,10 @@ public class MainActivity extends AppCompatActivity {
 
         view.addView(accelerometerDisplay);
         view.addView(accelerometerMax);
+        view.addView(accelerometerWrite);
         view.addView(lightSensorDisplay);
         view.addView(lightSensorMax);
+        view.addView(lightWrite);
 
         LightSensorEventListener lightSensorEventListener = new LightSensorEventListener(lightSensorDisplay,
                 lightSensorMax, this);
@@ -55,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
         sensorManager.registerListener(accelerometerEventListener,
                 sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                 SensorManager.SENSOR_DELAY_NORMAL);
+
+        accelerometerWrite.setOnClickListener(accelerometerEventListener);
+        lightWrite.setOnClickListener(lightSensorEventListener);
 
         lightSensorEventListener.start();
         accelerometerEventListener.start();
