@@ -13,7 +13,7 @@ public class AccelerometerEventListener extends EventListener {
 
     private LineGraphView lineGraphView;
 
-    public AccelerometerEventListener(LineGraphView output, TextView values, TextView maxView, Context context) {
+    public AccelerometerEventListener(LineGraphView output, TextView values, TextView maxView) {
         super(values, maxView, new String[] {
                 "x",
                 "y",
