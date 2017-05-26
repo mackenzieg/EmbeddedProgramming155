@@ -29,27 +29,33 @@ public class MainActivity extends AppCompatActivity {
                 Arrays.asList("x", "y", "z"));
         view.addView(lineGraphView);
 
-        TextView accelerometerDisplay = new TextView(getApplicationContext());
-        TextView accelerometerMax = new TextView(getApplicationContext());
-        TextView lightSensorDisplay = new TextView(getApplicationContext());
-        TextView lightSensorMax = new TextView(getApplicationContext());
+        TextView accelerometerLabel     = new TextView(getApplicationContext());
+        TextView accelerometerDisplay   = new TextView(getApplicationContext());
+        TextView accelerometerMax       = new TextView(getApplicationContext());
+        TextView magnoLabel             = new TextView(getApplicationContext());
+        TextView magnoDisplay           = new TextView(getApplicationContext());
+        TextView magnoMax               = new TextView(getApplicationContext());
+        TextView gyroLabel              = new TextView(getApplicationContext());
+        TextView gyroDisplay            = new TextView(getApplicationContext());
+        TextView gyroMax                = new TextView(getApplicationContext());
+        TextView lightLabel             = new TextView(getApplicationContext());
+        TextView lightSensorDisplay     = new TextView(getApplicationContext());
+        TextView lightSensorMax         = new TextView(getApplicationContext());
 
-        Button accelerometerWrite = new Button(getApplicationContext());
-        accelerometerWrite.setText("Write Accelerometer Data");
-        Button lightWrite = new Button(getApplicationContext());
-        lightWrite.setText("Write Light Sensor Data");
-
+        accelerometerLabel.setTextColor(Color.WHITE);
         accelerometerDisplay.setTextColor(Color.WHITE);
         accelerometerMax.setTextColor(Color.WHITE);
         lightSensorDisplay.setTextColor(Color.WHITE);
         lightSensorMax.setTextColor(Color.WHITE);
+
+        Button accelerometerWrite = new Button(getApplicationContext());
+        accelerometerWrite.setText("Write Accelerometer Data");
 
         view.addView(accelerometerDisplay);
         view.addView(accelerometerMax);
         view.addView(accelerometerWrite);
         view.addView(lightSensorDisplay);
         view.addView(lightSensorMax);
-        view.addView(lightWrite);
 
         LightSensorEventListener lightSensorEventListener = new LightSensorEventListener(lightSensorDisplay,
                 lightSensorMax, this);
@@ -66,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
                 SensorManager.SENSOR_DELAY_NORMAL);
 
         accelerometerWrite.setOnClickListener(accelerometerEventListener);
-        lightWrite.setOnClickListener(lightSensorEventListener);
 
         lightSensorEventListener.start();
         accelerometerEventListener.start();

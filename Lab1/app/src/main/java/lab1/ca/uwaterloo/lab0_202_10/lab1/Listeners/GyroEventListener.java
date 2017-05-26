@@ -2,11 +2,13 @@ package lab1.ca.uwaterloo.lab0_202_10.lab1.Listeners;
 
 import android.widget.TextView;
 
-public class LightSensorEventListener extends EventListener {
+public class GyroEventListener extends EventListener {
 
-    public LightSensorEventListener(TextView values, TextView maxView) {
-        super(values, maxView, new String[]{
-                "Intensity"
+    public GyroEventListener(TextView values, TextView maxView) {
+        super(values, maxView, new String[] {
+                "x",
+                "y",
+                "z"
         }, false);
     }
 
