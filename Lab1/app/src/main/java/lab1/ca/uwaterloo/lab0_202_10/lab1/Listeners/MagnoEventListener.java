@@ -9,7 +9,7 @@ public class MagnoEventListener extends EventListener {
                 "x",
                 "y",
                 "z"
-        }, false);
+        }, 3, false);
     }
 
     @Override
@@ -19,6 +19,6 @@ public class MagnoEventListener extends EventListener {
 
     @Override
     public void writeMaxValuesToView(Float[] values) {
-        ((TextView) this.getOutputView()).setText(this.getFormattedValues(values));
+        ((TextView) this.getMaxView()).setText(this.getFormattedMaxValues(values));
     }
 }

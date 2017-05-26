@@ -18,7 +18,7 @@ public class AccelerometerEventListener extends EventListener {
                 "x",
                 "y",
                 "z"
-        }, true);
+        }, 3, true);
         this.lineGraphView = output;
         this.lineGraphView.setVisibility(View.VISIBLE);
     }
@@ -36,7 +36,7 @@ public class AccelerometerEventListener extends EventListener {
 
     @Override
     public void writeMaxValuesToView(Float[] values) {
-        ((TextView) this.getOutputView()).setText(this.getFormattedValues(values));
+        ((TextView) this.getMaxView()).setText(this.getFormattedMaxValues(values));
     }
 
     @Override

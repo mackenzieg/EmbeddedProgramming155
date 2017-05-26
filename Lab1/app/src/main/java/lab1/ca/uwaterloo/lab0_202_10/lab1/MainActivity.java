@@ -66,9 +66,9 @@ public class MainActivity extends AppCompatActivity {
         };
 
         accelerometerLabel.setText("Accelerometer Data");
-        magnoLabel.setText("Magnometer Data");
-        gyroLabel.setText("Gyroscope Data");
-        lightLabel.setText("Light Sensor Data");
+        magnoLabel.setText("\nMagnometer Data");
+        gyroLabel.setText("\nGyroscope Data");
+        lightLabel.setText("\nLight Sensor Data");
 
         final AccelerometerEventListener accelerometerEventListener = new AccelerometerEventListener(lineGraphView,
                 accelerometerDisplay, accelerometerMax);

@@ -3,10 +3,12 @@ package lab1.ca.uwaterloo.lab0_202_10.lab1.Listeners;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
+import android.util.Log;
 import android.view.View;
 
 public abstract class EventListener extends EventHistory implements SensorEventListener {
 
+    private int valueLength;
     private Float[] values = null;
     private String[] labels = null;
     private View outputView;
@@ -16,12 +18,19 @@ public abstract class EventListener extends EventHistory implements SensorEventL
 
     private EventHistory eventHistory = null;
 
-    EventListener(View outputView, View maxView, String[] labels, boolean recordHistory) {
+    EventListener(View outputView, View maxView, String[] labels, int valueLength, boolean recordHistory) {
         this.outputView = outputView;
         this.maxView = maxView;
         this.labels = labels;
+        this.values = new Float[valueLength];
+        this.maxValues = new Float[valueLength];
         if (recordHistory) {
             eventHistory = new EventHistory();
+        }
+        this.valueLength = valueLength;
+
+        for (int i = 0; i < valueLength; ++i) {
+            maxValues[i] = values[i] = 0.0f;
         }
     }
 
@@ -39,19 +48,7 @@ public abstract class EventListener extends EventHistory implements SensorEventL
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        int length = event.values.length;
-        if (values == null) {
-            values = new Float[length];
-            for(int i = 0; i < length; ++i) {
-                values[i] = 0.0f;
-            }
-        }
-        if (maxValues == null) {
-            maxValues = new Float[length];
-            for(int i = 0; i < length; ++i) {
-                maxValues[i] = 0.0f;
-            }
-        }
+        int length = this.valueLength;
         boolean writeMax = false;
         for (int i = 0; i < length; ++i) {
             values[i] = event.values[i];
@@ -80,7 +77,7 @@ public abstract class EventListener extends EventHistory implements SensorEventL
         if (labels == null) {
             return null;
         }
-        return labels[i];
+        return this.labels[i];
     }
 
     public abstract void writeValuesToView(Float[] values);

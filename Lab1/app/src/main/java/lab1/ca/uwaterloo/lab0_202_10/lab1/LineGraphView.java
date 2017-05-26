@@ -197,7 +197,7 @@ public class LineGraphView extends View {
         for (int i = 0; i < y.size(); i++) {
             floats[i] = y.get(i);
         }
-        addPoint(y);
+        addPoint(floats);
     }
 
     /**
