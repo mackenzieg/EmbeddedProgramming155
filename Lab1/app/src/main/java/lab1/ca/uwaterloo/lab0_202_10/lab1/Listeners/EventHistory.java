@@ -5,8 +5,15 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.LinkedList;
 
+/**
+ * This class consists of a event history recorder. Also has the ability to write
+ * event history to specified file.
+ */
 class EventHistory {
 
+    /**
+     * LinkedList contains list of data points in history
+     */
     private LinkedList<Float[]> dataPoints = new LinkedList<>();
 
     private int length;
@@ -19,6 +26,10 @@ class EventHistory {
         this.length = 100;
     }
 
+    /**
+     * @param data point to add to event history que
+     * Checks for amount of values and removes if above wanted range
+     */
     void addData(Float[] data) {
         dataPoints.add(data);
         if (dataPoints.size() >= this.length) {
@@ -26,14 +37,24 @@ class EventHistory {
         }
     }
 
+    /**
+     * Clears all the data points
+     */
     void clearHistory() {
         this.dataPoints.clear();
     }
 
+    /**
+     * @return array of array of floats of data points
+     */
     private Float[][] getDataPoints() {
         return (Float[][]) dataPoints.toArray();
     }
 
+    /**
+     * @param file output to write data points to
+     * @throws FileNotFoundException
+     */
     public void writeDataToFile(File file) throws FileNotFoundException {
         PrintWriter printWriter = new PrintWriter(file);
         Float[][] points = getDataPoints();
