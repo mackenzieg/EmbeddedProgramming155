@@ -32,11 +32,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         LinearLayout view = (LinearLayout) findViewById(R.id.main_layout);
+        /*
+         * Create graph view
+         */
         LineGraphView lineGraphView = new LineGraphView(getApplicationContext(),
                 100,
                 Arrays.asList("x", "y", "z"));
         view.addView(lineGraphView);
 
+        /*
+         * Create all the views for sensors and labels
+         */
         TextView accelerometerLabel     = new TextView(getApplicationContext());
         TextView accelerometerDisplay   = new TextView(getApplicationContext());
         TextView accelerometerMax       = new TextView(getApplicationContext());
@@ -50,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
         TextView lightSensorDisplay     = new TextView(getApplicationContext());
         TextView lightSensorMax         = new TextView(getApplicationContext());
 
+        /*
+         * Generate array of views for easier iteration
+         */
         TextView[] textViews = new TextView [] {
             accelerometerLabel,
             accelerometerDisplay,
@@ -65,11 +74,17 @@ public class MainActivity extends AppCompatActivity {
             lightSensorMax
         };
 
+        /*
+         * Set text for labels
+         */
         accelerometerLabel.setText("Accelerometer Data");
         magnoLabel.setText("\nMagnometer Data");
         gyroLabel.setText("\nGyroscope Data");
         lightLabel.setText("\nLight Sensor Data");
 
+        /*
+         * Create event listeners for accelerometer, magnometer, gyroscope and light sensor
+         */
         final AccelerometerEventListener accelerometerEventListener = new AccelerometerEventListener(lineGraphView,
                 accelerometerDisplay, accelerometerMax);
         final MagnoEventListener magnoEventListener = new MagnoEventListener(magnoDisplay,
@@ -79,11 +94,17 @@ public class MainActivity extends AppCompatActivity {
         final LightSensorEventListener lightSensorEventListener = new LightSensorEventListener(lightSensorDisplay,
                 lightSensorMax);
 
+        /*
+         * Create button for clear max and write to file
+         */
         Button clearMax = new Button(getApplicationContext());
         Button accelerometerWrite = new Button(getApplicationContext());
         clearMax.setText("Clear Max Values");
         accelerometerWrite.setText("Write Accelerometer Data");
 
+        /*
+         * Add listener to button to clear max and history
+         */
         clearMax.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,6 +116,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        /*
+         * File to write accelerometer data to
+         */
         final File file = new File(getExternalFilesDir("accelerometer"), "data.txt");
 
         accelerometerWrite.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +140,9 @@ public class MainActivity extends AppCompatActivity {
             view.addView(textView);
         }
 
+        /*
+         * Register all the listeners with the SensorManager
+         */
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensorManager.registerListener(accelerometerEventListener,
                 sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
