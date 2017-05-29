@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * This class consists of a event history recorder. Also has the ability to write
@@ -48,7 +49,15 @@ class EventHistory {
      * @return array of array of floats of data points
      */
     private Float[][] getDataPoints() {
-        return (Float[][]) dataPoints.toArray();
+        Object[] points = dataPoints.toArray();
+        if (points.length == 0) {
+            return null;
+        }
+        Float[][] pointArray = new Float[points.length][((Float[])points[0]).length];
+        for (int y = 0; y < points.length; ++y) {
+            System.arraycopy(((Float[]) points[y]), 0, pointArray[y], 0, ((Float[]) points[y]).length);
+        }
+        return pointArray;
     }
 
     /**
@@ -58,6 +67,9 @@ class EventHistory {
     public void writeDataToFile(File file) throws FileNotFoundException {
         PrintWriter printWriter = new PrintWriter(file);
         Float[][] points = getDataPoints();
+        if (points == null) {
+            return;
+        }
         for(int y = 0; y < points.length; ++y) {
             String expandedPoints = "";
             for(int x = 0; x < points[y].length; ++x) {
