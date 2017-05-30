@@ -40,7 +40,7 @@ public class LineGraphView extends View {
 
     private List<Paint> linePaints = new ArrayList<Paint>();
 
-    public final int[] defalutColors = {0xffff0000,
+    public final int[] defaultColours = {0xffff0000,
             0xff00ff00,
             0xff0000ff,
             0xff000000,
@@ -75,7 +75,7 @@ public class LineGraphView extends View {
         maxDataWidth = dataWidth;
         this.labels = labels;
 
-        setColors(defalutColors);
+        setColors(defaultColours);
     }
 
     /**

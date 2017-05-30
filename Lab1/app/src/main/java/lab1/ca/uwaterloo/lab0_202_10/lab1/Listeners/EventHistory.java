@@ -65,7 +65,7 @@ class EventHistory {
      */
     public void writeDataToFile(File file) throws FileNotFoundException {
         PrintWriter printWriter = new PrintWriter(file);
-        Float[][] points = getDataPoints();
+        Float[][] points = this.getDataPoints();
         if (points == null) {
             return;
         }

@@ -79,6 +79,9 @@ public abstract class EventListener extends EventHistory implements SensorEventL
         if (writeMax) {
             writeMaxValuesToView(this.maxValues);
         }
+        if (eventHistory != null) {
+            eventHistory.addData(values);
+        }
     }
 
     /**

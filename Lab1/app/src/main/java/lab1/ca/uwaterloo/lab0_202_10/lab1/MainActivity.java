@@ -11,15 +11,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import lab1.ca.uwaterloo.lab0_202_10.lab1.Listeners.AccelerometerEventListener;
-import lab1.ca.uwaterloo.lab0_202_10.lab1.Listeners.EventListener;
 import lab1.ca.uwaterloo.lab0_202_10.lab1.Listeners.GyroEventListener;
 import lab1.ca.uwaterloo.lab0_202_10.lab1.Listeners.LightSensorEventListener;
 import lab1.ca.uwaterloo.lab0_202_10.lab1.Listeners.MagnoEventListener;
@@ -119,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         /*
          * File to write accelerometer data to
          */
-        final File file = new File(getExternalFilesDir("accelerometer"), "data.txt");
+        final File file = new File(getExternalFilesDir("accelerometer") + "/data.csv");
 
         accelerometerWrite.setOnClickListener(new View.OnClickListener() {
             @Override
