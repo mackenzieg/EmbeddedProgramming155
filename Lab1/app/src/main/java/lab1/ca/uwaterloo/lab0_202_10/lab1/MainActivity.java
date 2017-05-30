@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         TextView magnoDisplay           = new TextView(getApplicationContext());
         TextView magnoMax               = new TextView(getApplicationContext());
         TextView gyroLabel              = new TextView(getApplicationContext());
-        final TextView gyroDisplay            = new TextView(getApplicationContext());
+        TextView gyroDisplay            = new TextView(getApplicationContext());
         TextView gyroMax                = new TextView(getApplicationContext());
         TextView lightLabel             = new TextView(getApplicationContext());
         TextView lightSensorDisplay     = new TextView(getApplicationContext());
