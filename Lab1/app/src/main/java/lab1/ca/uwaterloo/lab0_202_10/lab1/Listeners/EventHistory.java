@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * This class consists of a event history recorder. Also has the ability to write
