@@ -32,7 +32,7 @@ public class EventHistory {
      */
     void addData(Float[] data) {
         dataPoints.add(data);
-        if (dataPoints.size() >= this.length) {
+        if (dataPoints.size() > this.length) {
             dataPoints.removeLast();
         }
     }
