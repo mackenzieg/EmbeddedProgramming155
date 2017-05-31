@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
          */
         Button clearMax = new Button(getApplicationContext());
         Button accelerometerWrite = new Button(getApplicationContext());
-        clearMax.setText("Clear Max Values");
+        clearMax.setText("Clear Max Values And History");
         accelerometerWrite.setText("Write Accelerometer Data");
 
         /*
