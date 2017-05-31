@@ -54,7 +54,9 @@ public class EventHistory {
         }
         Float[][] pointArray = new Float[points.length][((Float[])points[0]).length];
         for (int y = 0; y < points.length; ++y) {
-            System.arraycopy(((Float[]) points[y]), 0, pointArray[y], 0, ((Float[]) points[y]).length);
+            for (int x = 0; x < ((Float[])points[y]).length; ++x) {
+                pointArray[y][x] = ((Float[]) points[y])[x];
+            }
         }
         return pointArray;
     }
