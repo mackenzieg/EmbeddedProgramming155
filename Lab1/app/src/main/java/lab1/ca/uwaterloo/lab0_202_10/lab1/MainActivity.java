@@ -141,18 +141,18 @@ public class MainActivity extends AppCompatActivity {
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensorManager.registerListener(accelerometerEventListener,
                 sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-                SensorManager.SENSOR_DELAY_GAME);
+                SensorManager.SENSOR_DELAY_NORMAL);
 
         sensorManager.registerListener(magnoEventListener,
                 sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
-                SensorManager.SENSOR_DELAY_GAME);
+                SensorManager.SENSOR_DELAY_NORMAL);
 
         sensorManager.registerListener(gyroEventListener,
                 sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),
-                SensorManager.SENSOR_DELAY_GAME);
+                SensorManager.SENSOR_DELAY_NORMAL);
 
         sensorManager.registerListener(lightSensorEventListener,
                 sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT),
-                SensorManager.SENSOR_DELAY_GAME);
+                SensorManager.SENSOR_DELAY_NORMAL);
     }
 }
