@@ -10,7 +10,7 @@ import android.view.View;
  * support for displaying current data points and recording max data points.
  * Also auto inserts prefixes for data points such as (x, y, z).
  */
-public abstract class EventListener extends EventHistory implements SensorEventListener {
+public abstract class EventListener implements SensorEventListener {
 
     private int valueLength;
     private Float[] values = null;

@@ -9,7 +9,7 @@ import java.util.LinkedList;
  * This class consists of a event history recorder. Also has the ability to write
  * event history to specified file.
  */
-class EventHistory {
+public class EventHistory {
 
     /**
      * LinkedList contains list of data points in history

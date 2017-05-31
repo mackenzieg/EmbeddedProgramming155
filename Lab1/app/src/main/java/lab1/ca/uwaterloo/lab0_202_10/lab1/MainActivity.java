@@ -104,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
         clearMax.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                accelerometerEventListener.clearHistory();
                 accelerometerEventListener.clearMax();
                 magnoEventListener.clearMax();
                 gyroEventListener.clearMax();
@@ -121,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    accelerometerEventListener.writeDataToFile(file);
+                    accelerometerEventListener.getEventHistory().writeDataToFile(file);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }

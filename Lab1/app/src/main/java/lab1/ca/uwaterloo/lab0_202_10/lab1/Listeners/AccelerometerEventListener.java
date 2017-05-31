@@ -38,10 +38,4 @@ public class AccelerometerEventListener extends EventListener {
     public void writeMaxValuesToView(Float[] values) {
         ((TextView) this.getMaxView()).setText(this.getFormattedMaxValues(values));
     }
-
-    @Override
-    public void clearHistory() {
-        super.clearHistory();
-        this.lineGraphView.purge();
-    }
 }
