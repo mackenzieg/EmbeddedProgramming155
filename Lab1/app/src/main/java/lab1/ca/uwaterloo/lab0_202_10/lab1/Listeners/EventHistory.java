@@ -31,7 +31,7 @@ public class EventHistory {
      * Checks for amount of values and removes if above wanted range
      */
     void addData(Float[] data) {
-        dataPoints.add(data);
+        dataPoints.add(data.clone());
         if (dataPoints.size() > this.length) {
             dataPoints.removeLast();
         }
