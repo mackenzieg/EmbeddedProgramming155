@@ -33,7 +33,9 @@ proguard/
 captures/
 
 # Intellij
+.svn
 .idea
+Lab1/.idea/misc.xml
 *.iml
 modules.xml
 .DS_Store
