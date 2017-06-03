@@ -1,5 +1,7 @@
 package lab2_202_10.uwaterloo.ca.lab2.gesture.filter;
 
+import android.util.Log;
+
 /**
  * This filter remove a vector if it doesn't differ enough from the previous
  * retrieved value
@@ -7,10 +9,10 @@ package lab2_202_10.uwaterloo.ca.lab2.gesture.filter;
 public class DifferenceEquivalenceFilter extends Filter {
 
     private double sensitivity;
-    private double[] previous;
+    private float[] previous;
 
     public DifferenceEquivalenceFilter() {
-        this(0.2);
+        this(0.2f);
     }
 
     public DifferenceEquivalenceFilter(double sensitivity) {
@@ -19,18 +21,21 @@ public class DifferenceEquivalenceFilter extends Filter {
         this.reset();
     }
 
-    public void setSensitivity(double sensitivity) {
+    public void setSensitivity(float sensitivity) {
         this.sensitivity = sensitivity;
     }
 
     @Override
-    public double[] filterAlgorithm(double[] vector) {
+    public float[] filterAlgorithm(float[] vector) {
+        if (vector == null) {
+            return null;
+        }
         if (vector[0] < previous[0] - this.sensitivity ||
                 vector[0] > previous[0] + this.sensitivity ||
                 vector[1] < previous[1] - this.sensitivity ||
                 vector[1] > previous[1] + this.sensitivity ||
                 vector[2] < previous[2] - this.sensitivity ||
-                vector[3] > previous[2] + this.sensitivity) {
+                vector[2] > previous[2] + this.sensitivity) {
             this.previous = vector;
             return vector;
         }
@@ -39,6 +44,6 @@ public class DifferenceEquivalenceFilter extends Filter {
 
     @Override
     public void reset() {
-        this.previous = new double[] {0.0, 0.0, 0.0};
+        this.previous = new float[] {0.0f, 0.0f, 0.0f};
     }
 }
