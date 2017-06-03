@@ -15,4 +15,8 @@ public class Gesture {
     public Vector<AccelerometerPoint> getData() {
         return this.data;
     }
+
+    public void addPoint(AccelerometerPoint accelerometerPoint) {
+        this.data.add(accelerometerPoint);
+    }
 }

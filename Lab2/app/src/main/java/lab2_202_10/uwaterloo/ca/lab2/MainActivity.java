@@ -1,18 +1,19 @@
 package lab2_202_10.uwaterloo.ca.lab2;
 
+import android.graphics.Color;
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import lab2_202_10.uwaterloo.ca.lab2.gesture.filter.BroadBandpassFilter;
+import lab2_202_10.uwaterloo.ca.lab2.gesture.listener.GestureListener;
+import lab2_202_10.uwaterloo.ca.lab2.gesture.listener.PostFilterSensorListener;
 import lab2_202_10.uwaterloo.ca.lab2.gesture.filter.DifferenceEquivalenceFilter;
 import lab2_202_10.uwaterloo.ca.lab2.gesture.filter.Filter;
 import lab2_202_10.uwaterloo.ca.lab2.gesture.filter.HighPassFilter;
@@ -27,9 +28,9 @@ public class MainActivity extends AppCompatActivity {
 
         LinearLayout view = (LinearLayout) findViewById(R.id.main_layout);
 
-        final LineGraphView lineGraphView = new LineGraphView(getApplicationContext(),
-                100,
-                Arrays.asList("x", "y", "z"));
+        TextView textView = new TextView(this);
+
+        textView.setTextColor(Color.WHITE);
 
 
         final LineGraphView
@@ -37,8 +38,8 @@ public class MainActivity extends AppCompatActivity {
                 100,
                 Arrays.asList("x", "y", "z"));
 
-        view.addView(lineGraphView);
         view.addView(anotherLineGraphView);
+        view.addView(textView);
 
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
@@ -47,24 +48,14 @@ public class MainActivity extends AppCompatActivity {
         filters.add(new HighPassFilter());
         filters.add(new DifferenceEquivalenceFilter());
 
-        sensorManager.registerListener(new SensorEventListener() {
-            @Override
-            public void onSensorChanged(SensorEvent event) {
-                float[] newVals = event.values;
-                lineGraphView.addPoint(event.values);
-                for (Filter filter : filters) {
-                    newVals = filter.filter(newVals);
-                }
-                if (newVals == null) {
-                    return;
-                }
-                anotherLineGraphView.addPoint(newVals);
-            }
+        final long lastTime = -1;
 
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        GestureListener gestureListener = new GestureListener(anotherLineGraphView);
 
-            }
-        }, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_FASTEST);
+        PostFilterSensorListener postFilter = new PostFilterSensorListener(filters);
+        postFilter.addListener(gestureListener);
+
+        sensorManager.registerListener(postFilter,
+                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_FASTEST);
     }
 }
