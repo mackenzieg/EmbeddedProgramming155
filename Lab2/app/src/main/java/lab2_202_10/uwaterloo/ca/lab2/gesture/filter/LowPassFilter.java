@@ -30,6 +30,6 @@ public class LowPassFilter extends Filter {
 
     @Override
     public void reset() {
-        this.previous = new float[] {0.0f, 0.0f, 0.0f};
+        this.previous = new float[]{0.0f, 0.0f, 0.0f};
     }
 }

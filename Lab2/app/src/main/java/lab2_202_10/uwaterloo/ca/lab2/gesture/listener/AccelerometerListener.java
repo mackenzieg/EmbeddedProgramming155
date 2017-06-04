@@ -1,7 +1,7 @@
 package lab2_202_10.uwaterloo.ca.lab2.gesture.listener;
 
-public interface AccelerometerListener {
+interface AccelerometerListener {
 
-    public void sensorUpdate(float[] values);
+    void sensorUpdate(float[] values);
 
 }

@@ -10,25 +10,23 @@ import java.util.List;
 
 import lab2_202_10.uwaterloo.ca.lab2.gesture.filter.Filter;
 
-public class PostFilterSensorListener implements SensorEventListener {
+public class SensorListener implements SensorEventListener {
 
     private List<Filter> filters;
     private List<AccelerometerListener> listeners = new ArrayList<>();
 
-    public PostFilterSensorListener(List<Filter> filters) {
+    public SensorListener(List<Filter> filters) {
         this.filters = filters;
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         float[] values = event.values;
-        for (Filter filter: filters) {
+        for (Filter filter : filters) {
             values = filter.filter(values);
         }
-        if (values != null) {
-            for (AccelerometerListener sensorEventListener : listeners) {
-                sensorEventListener.sensorUpdate(values);
-            }
+        for (AccelerometerListener sensorEventListener : listeners) {
+            sensorEventListener.sensorUpdate(values);
         }
     }
 
@@ -38,5 +36,7 @@ public class PostFilterSensorListener implements SensorEventListener {
 
     public void addListener(AccelerometerListener sensorEventListener) {
         this.listeners.add(sensorEventListener);
-    };
+    }
+
+    ;
 }

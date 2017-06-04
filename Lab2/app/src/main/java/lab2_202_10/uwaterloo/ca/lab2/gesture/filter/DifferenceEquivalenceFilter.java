@@ -1,7 +1,5 @@
 package lab2_202_10.uwaterloo.ca.lab2.gesture.filter;
 
-import android.util.Log;
-
 /**
  * This filter remove a vector if it doesn't differ enough from the previous
  * retrieved value
@@ -44,6 +42,6 @@ public class DifferenceEquivalenceFilter extends Filter {
 
     @Override
     public void reset() {
-        this.previous = new float[] {0.0f, 0.0f, 0.0f};
+        this.previous = new float[]{0.0f, 0.0f, 0.0f};
     }
 }

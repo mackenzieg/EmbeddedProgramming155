@@ -36,10 +36,6 @@ import java.util.List;
  * @author Kirill
  */
 public class LineGraphView extends View {
-    private List<float[]> points = new ArrayList<float[]>();
-
-    private List<Paint> linePaints = new ArrayList<Paint>();
-
     public final int[] defaultColours = {0xffff0000,
             0xff00ff00,
             0xff0000ff,
@@ -48,16 +44,15 @@ public class LineGraphView extends View {
             0xffff00ff,
             0xff00ffff,
     };
-
-    private Paint graphPaint = new Paint();
-
-    private final int WIDTH = 800;
-    private final int HEIGHT = 800;
+    private final int WIDTH = 600;
+    private final int HEIGHT = 600;
     private final int AXIS_WIDTH = 100;
-
-    private float xScale, yScale;
     private final int maxDataWidth;
     private final List<String> labels;
+    private List<float[]> points = new ArrayList<float[]>();
+    private List<Paint> linePaints = new ArrayList<Paint>();
+    private Paint graphPaint = new Paint();
+    private float xScale, yScale;
 
 
     /**
