@@ -24,7 +24,7 @@ public class PostFilterListener implements AccelerometerListener {
     private Gesture gesture;
 
     public PostFilterListener(GestureManager gestureManager, LineGraphView filtered, LineGraphView lengthGraph) {
-        this.gestureManager = new GestureManager();
+        this.gestureManager = gestureManager;
         this.filtered = filtered;
         this.lengthGraph = lengthGraph;
     }

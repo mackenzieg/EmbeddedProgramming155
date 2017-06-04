@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import lab2_202_10.uwaterloo.ca.lab2.gesture.LabelledGesture;
 import lab2_202_10.uwaterloo.ca.lab2.gesture.filter.DifferenceEquivalenceFilter;
 import lab2_202_10.uwaterloo.ca.lab2.gesture.filter.Filter;
 import lab2_202_10.uwaterloo.ca.lab2.gesture.filter.HighPassFilter;
@@ -50,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
         filters.add(new HighPassFilter());
         filters.add(new DifferenceEquivalenceFilter());
 
-        GestureManager gestureManager = new GestureManager();
+        List<LabelledGesture> labelledGestures = new ArrayList<>();
+
+        GestureManager gestureManager = new GestureManager(labelledGestures);
 
         PostFilterListener gestureListener = new PostFilterListener(gestureManager, anotherLineGraphView, lengthOfVectors);
 

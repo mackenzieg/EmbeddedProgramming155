@@ -11,15 +11,24 @@ import lab2_202_10.uwaterloo.ca.lab2.gesture.LabelledGesture;
 
 public class GestureManager {
 
-    private Gesture gesture = null;
-
     private List<LabelledGesture> recognizedGestures;
 
-    public GestureManager(List<LabelledGesture> recognizedGestures) {
+    private boolean recording;
+
+    public GestureManager(List<LabelledGesture> recognizedGestures, boolean recording) {
         this.recognizedGestures = recognizedGestures;
+        this.recording = recording;
+    }
+
+    public void addGesture(LabelledGesture labelledGesture) {
+        this.recognizedGestures.add(labelledGesture);
     }
 
     public void newGesture(Gesture gesture) {
+
+        if (recording) {
+
+        }
 
         Object[][] comparedTimeWarps = new Object[recognizedGestures.size()][2];
 
@@ -48,5 +57,7 @@ public class GestureManager {
 
         Log.d("DEBUG", recognized);
     }
+
+    public abstract void
 
 }
