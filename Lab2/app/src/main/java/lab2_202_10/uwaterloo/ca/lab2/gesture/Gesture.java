@@ -16,6 +16,18 @@ public class Gesture {
         this.z = new ArrayList<>();
     }
 
+    public void setX(List<Float> x) {
+        this.x = x;
+    }
+
+    public void setY(List<Float> y) {
+        this.y = y;
+    }
+
+    public void setZ(List<Float> z) {
+        this.z = z;
+    }
+
     public List<Float> getX() {
         return this.x;
     }

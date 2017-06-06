@@ -9,6 +9,12 @@ public class LabelledGesture extends Gesture {
         this.label = label;
     }
 
+    public void setGesture(Gesture gesture) {
+        this.setX(gesture.getX());
+        this.setY(gesture.getY());
+        this.setZ(gesture.getZ());
+    }
+
     public String getLabel() {
         return label;
     }

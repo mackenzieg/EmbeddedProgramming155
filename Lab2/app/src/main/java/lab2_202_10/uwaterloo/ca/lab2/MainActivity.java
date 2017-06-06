@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         LinearLayout view = (LinearLayout) findViewById(R.id.main_layout);
 
-        TextView gestureIndicator = new TextView(this);
+        final TextView gestureIndicator = new TextView(this);
 
         gestureIndicator.setTextColor(Color.WHITE);
 
@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         final LineGraphView lengthOfVectors = new LineGraphView(getApplicationContext(), 100, Arrays.asList("x"));
 
+        view.addView(gestureIndicator);
         view.addView(anotherLineGraphView);
         view.addView(lengthOfVectors);
 
@@ -52,8 +53,17 @@ public class MainActivity extends AppCompatActivity {
         filters.add(new DifferenceEquivalenceFilter());
 
         List<LabelledGesture> labelledGestures = new ArrayList<>();
+        labelledGestures.add(new LabelledGesture("Up"));
+        labelledGestures.add(new LabelledGesture("Down"));
+        labelledGestures.add(new LabelledGesture("Left"));
+        labelledGestures.add(new LabelledGesture("Right"));
 
-        GestureManager gestureManager = new GestureManager(labelledGestures);
+        GestureManager gestureManager = new GestureManager(labelledGestures) {
+            @Override
+            public void caughtLabelledGesture(LabelledGesture labelledGesture) {
+                gestureIndicator.setText("Recorded: " + labelledGesture.getLabel());
+            }
+        };
 
         PostFilterListener gestureListener = new PostFilterListener(gestureManager, anotherLineGraphView, lengthOfVectors);
 

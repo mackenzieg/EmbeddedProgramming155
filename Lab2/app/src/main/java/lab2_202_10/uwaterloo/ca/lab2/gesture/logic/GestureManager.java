@@ -13,21 +13,30 @@ public class GestureManager {
 
     private List<LabelledGesture> recognizedGestures;
 
-    private boolean recording;
+    private int recordedGestures = 0;
 
-    public GestureManager(List<LabelledGesture> recognizedGestures, boolean recording) {
+    public GestureManager(List<LabelledGesture> recognizedGestures) {
         this.recognizedGestures = recognizedGestures;
-        this.recording = recording;
     }
 
-    public void addGesture(LabelledGesture labelledGesture) {
+    public void addLabelledGesture(LabelledGesture labelledGesture) {
         this.recognizedGestures.add(labelledGesture);
     }
 
+    public void removeLastRecordedGesture() {
+        recognizedGestures.remove(recordedGestures--);
+    }
+
+    public void caughtLabelledGesture(LabelledGesture labelledGesture) {}
+
     public void newGesture(Gesture gesture) {
 
-        if (recording) {
-
+        if (this.recordedGestures < recognizedGestures.size()) {
+            LabelledGesture labelledGesture = recognizedGestures.get(recordedGestures);
+            labelledGesture.setGesture(gesture);
+            this.caughtLabelledGesture(labelledGesture);
+            ++recordedGestures;
+            return;
         }
 
         Object[][] comparedTimeWarps = new Object[recognizedGestures.size()][2];
@@ -49,15 +58,16 @@ public class GestureManager {
         String recognized = "";
         float smallest = Float.POSITIVE_INFINITY;
 
-        for (int i = 1; i < comparedTimeWarps.length; ++i) {
-            if (smallest > (Float) comparedTimeWarps[i][1]) {
+        for (int i = 0; i < comparedTimeWarps.length; ++i) {
+            Log.d("DEBUG", "" + comparedTimeWarps[i][0]);
+            Log.d("DEBUG", "" + comparedTimeWarps[i][1]);
+            if ((Float) comparedTimeWarps[i][1] < smallest) {
+                smallest = (Float) comparedTimeWarps[i][1];
                 recognized = (String) comparedTimeWarps[i][0];
             }
         }
 
         Log.d("DEBUG", recognized);
     }
-
-    public abstract void
 
 }
