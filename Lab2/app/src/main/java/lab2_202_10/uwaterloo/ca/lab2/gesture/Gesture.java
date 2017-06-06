@@ -1,5 +1,8 @@
 package lab2_202_10.uwaterloo.ca.lab2.gesture;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -44,5 +47,25 @@ public class Gesture {
         this.x.add(values[0]);
         this.y.add(values[1]);
         this.z.add(values[2]);
+    }
+
+    public void writeToFile(File file) throws FileNotFoundException {
+        PrintWriter printWriter = new PrintWriter(file);
+        printWriter.println(this.toString());
+        printWriter.flush();
+        printWriter.close();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("name:Unknown-length:");
+        stringBuilder.append(x.size());
+        stringBuilder.append("-points:");
+        for (int i = 0; i < x.size(); ++i) {
+            stringBuilder.append(String.format("(%f,%f,%f)", x.get(i), y.get(i), z.get(i)));
+        }
+        stringBuilder.append(";");
+        return stringBuilder.toString();
     }
 }

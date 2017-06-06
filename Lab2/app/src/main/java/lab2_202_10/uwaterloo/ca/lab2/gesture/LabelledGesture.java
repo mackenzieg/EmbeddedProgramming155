@@ -18,4 +18,12 @@ public class LabelledGesture extends Gesture {
     public String getLabel() {
         return label;
     }
+
+    @Override
+    public String toString() {
+        String fullText = super.toString();
+        int index = fullText.indexOf("-");
+        return "name:-" + fullText.substring(index, fullText.length());
+    }
+
 }
