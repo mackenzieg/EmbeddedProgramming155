@@ -5,12 +5,14 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import lab2_202_10.uwaterloo.ca.lab2.gesture.LabelledGesture;
 import lab2_202_10.uwaterloo.ca.lab2.gesture.filter.DifferenceEquivalenceFilter;
@@ -33,10 +35,11 @@ public class MainActivity extends AppCompatActivity {
         final TextView gestureIndicator = new TextView(this);
 
         gestureIndicator.setTextColor(Color.WHITE);
+        gestureIndicator.setTextSize(25);
 
         final LineGraphView
                 anotherLineGraphView = new LineGraphView(getApplicationContext(),
-                1000,
+                100,
                 Arrays.asList("x", "y", "z"));
 
         final LineGraphView lengthOfVectors = new LineGraphView(getApplicationContext(), 100, Arrays.asList("x"));
@@ -52,16 +55,29 @@ public class MainActivity extends AppCompatActivity {
         filters.add(new HighPassFilter());
         filters.add(new DifferenceEquivalenceFilter());
 
-        List<LabelledGesture> labelledGestures = new ArrayList<>();
+        final List<LabelledGesture> labelledGestures = new ArrayList<>();
         labelledGestures.add(new LabelledGesture("Up"));
         labelledGestures.add(new LabelledGesture("Down"));
         labelledGestures.add(new LabelledGesture("Left"));
         labelledGestures.add(new LabelledGesture("Right"));
 
+        final AtomicInteger index = new AtomicInteger(0);
+
+        gestureIndicator.setText("Recording " + labelledGestures.get(index.getAndIncrement()).getLabel());
+
         GestureManager gestureManager = new GestureManager(labelledGestures) {
             @Override
-            public void caughtLabelledGesture(LabelledGesture labelledGesture) {
-                gestureIndicator.setText("Recorded: " + labelledGesture.getLabel());
+            public void caughtReferenceGesture(LabelledGesture labelledGesture) {
+                int value = index.getAndIncrement();
+                if (value > labelledGestures.size() - 1) {
+                    return;
+                }
+                gestureIndicator.setText("Recording: " + labelledGestures.get(value).getLabel());
+            }
+
+            @Override
+            public void caughtRecognizedGesture(LabelledGesture labelledGesture) {
+                gestureIndicator.setText("Detected: " + labelledGesture.getLabel());
             }
         };
 
