@@ -87,7 +87,9 @@ public class MainActivity extends AppCompatActivity {
         postFilter.addListener(gestureListener);
 
         sensorManager.registerListener(postFilter,
-                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_FASTEST);
+                sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), SensorManager.SENSOR_DELAY_FASTEST);
+        anotherLineGraphView.setVisibility(0);
+        view.setVisibility(0);
     }
 }
 

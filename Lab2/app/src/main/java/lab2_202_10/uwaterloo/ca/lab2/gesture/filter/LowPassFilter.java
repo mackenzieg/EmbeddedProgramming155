@@ -2,30 +2,42 @@ package lab2_202_10.uwaterloo.ca.lab2.gesture.filter;
 
 public class LowPassFilter extends Filter {
 
-    private float factor;
     private float[] previous;
 
-    public LowPassFilter() {
-        this(0.1f);
-    }
+    private final double TIME_CONSTANT = 0.10;
+    private final int COUNT_BEFORE_UPDATE = 1;
+    private double alpha = 0.95;
+    private double deltaTime = 0.0;
 
-    public LowPassFilter(float factor) {
+    private double timeStamp = System.nanoTime();
+    private double m_StartTime = 0.0;
+
+    private int count = 0;
+
+    public LowPassFilter() {
         super();
-        this.factor = factor;
         this.reset();
     }
 
     @Override
     public float[] filterAlgorithm(float[] vector) {
-        if (vector == null) {
-            return null;
+        if (m_StartTime == 0.0)
+        {
+            m_StartTime = System.nanoTime();
         }
-        float[] newVals = new float[3];
-        for (int i = 0; i < 3; ++i) {
-            previous[i] = vector[i] * this.factor + this.previous[i] * (1.0f - this.factor);
+
+        timeStamp = System.nanoTime();
+        deltaTime = 1.0 / (count++ / ((timeStamp - m_StartTime) / 1000000000.0));
+        alpha = TIME_CONSTANT / (TIME_CONSTANT + deltaTime);
+
+        if (count > COUNT_BEFORE_UPDATE)
+        {
+            previous[0] = (float)(alpha * previous[0] + (1 - alpha) * vector[0]);
+            previous[1] = (float)(alpha * previous[1] + (1 - alpha) * vector[1]);
+            previous[2] = (float)(alpha * previous[2] + (1 - alpha) * vector[2]);
         }
-        newVals = this.previous;
-        return newVals;
+
+        return previous;
     }
 
     @Override
