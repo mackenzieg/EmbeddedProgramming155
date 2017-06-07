@@ -5,7 +5,7 @@ import java.util.List;
 
 import lab2_202_10.uwaterloo.ca.lab2.util.Array;
 
-public class TimeWarp {
+public final class TimeWarp {
 
     // Wave form measured
     private float[] x;
@@ -36,7 +36,7 @@ public class TimeWarp {
         // Compare every point to every other point in matrix
         for (int i = 0; i < this.x.length; ++i) {
             for (int j = 0; j < this.y.length; ++j) {
-                distance[i][j] = Math.abs(x[i] - y[j]);
+                distance[i][j] = this.getDistance(x[i], y[j]);
             }
         }
 
@@ -88,5 +88,9 @@ public class TimeWarp {
             dtw[i][j] = distance[i - 1][j - 1] + computeBackward(i - 1, j - 1);
         }
         return dtw[i][j];
+    }
+
+    public float getDistance(float x, float y) {
+        return Math.abs(x - y);
     }
 }
