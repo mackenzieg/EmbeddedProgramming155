@@ -10,7 +10,7 @@ public class LowPassFilter extends Filter {
     private double deltaTime = 0.0;
 
     private double timeStamp = System.nanoTime();
-    private double m_StartTime = 0.0;
+    private double startTime = 0.0;
 
     private int count = 0;
 
@@ -21,13 +21,13 @@ public class LowPassFilter extends Filter {
 
     @Override
     public float[] filterAlgorithm(float[] vector) {
-        if (m_StartTime == 0.0)
+        if (startTime == 0.0)
         {
-            m_StartTime = System.nanoTime();
+            startTime = System.nanoTime();
         }
 
         timeStamp = System.nanoTime();
-        deltaTime = 1.0 / (count++ / ((timeStamp - m_StartTime) / 1000000000.0));
+        deltaTime = 1.0 / (count++ / ((timeStamp - startTime) / 1000000000.0));
         alpha = TIME_CONSTANT / (TIME_CONSTANT + deltaTime);
 
         if (count > COUNT_BEFORE_UPDATE)
