@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
+        // Make all Filters
         final List<Filter> filters = new ArrayList<>();
         filters.add(new LowPassFilter());
         filters.add(new HighPassFilter());
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
         gestureIndicator.setText("Recording " + labelledGestures.get(index.getAndIncrement()).getLabel());
 
+        // Make gesture manager
         GestureManager gestureManager = new GestureManager(labelledGestures) {
             @Override
             public void caughtReferenceGesture(LabelledGesture labelledGesture) {
@@ -81,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        // Generate listerner for after filters
         PostFilterListener gestureListener = new PostFilterListener(gestureManager, anotherLineGraphView, lengthOfVectors);
 
         SensorListener postFilter = new SensorListener(filters);

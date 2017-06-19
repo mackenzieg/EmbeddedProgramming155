@@ -19,10 +19,11 @@ public class LowPassFilter extends Filter {
         this.reset();
     }
 
+    // Integrate over field time
     @Override
     public float[] filterAlgorithm(float[] vector) {
-        if (startTime == 0.0)
-        {
+        // Reset time to current time
+        if (startTime == 0.0) {
             startTime = System.nanoTime();
         }
 
@@ -30,6 +31,7 @@ public class LowPassFilter extends Filter {
         deltaTime = 1.0 / (count++ / ((timeStamp - startTime) / 1000000000.0));
         alpha = TIME_CONSTANT / (TIME_CONSTANT + deltaTime);
 
+        // Integrate vector and set to previous
         if (count > COUNT_BEFORE_UPDATE)
         {
             previous[0] = (float)(alpha * previous[0] + (1 - alpha) * vector[0]);
@@ -40,6 +42,7 @@ public class LowPassFilter extends Filter {
         return previous;
     }
 
+    // reseset previous vectors
     @Override
     public void reset() {
         this.previous = new float[]{0.0f, 0.0f, 0.0f};
