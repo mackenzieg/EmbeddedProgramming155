@@ -1,6 +1,10 @@
 package lab3.ca.uwaterloo.lab0_202_10.lab3;
 
 import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.LinearLayout;
@@ -48,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
         view.addView(textView);
         view.addView(anotherLineGraphView);
 
+        textView.setText("Nothing yet");
+
         textView.setTextColor(Color.WHITE);
 
         final BuiltDevice builtDevice = new Device()
@@ -64,12 +70,27 @@ public class MainActivity extends AppCompatActivity {
                 .registerListener(new Event() {
                     @EventHandler
                     public void detectedGesture(DetectedGestureEvent detectedGestureEvent) {
-                        textView.setText(detectedGestureEvent.getLabelledTimeSeries().getType().getName());
+                        textView.setText(detectedGestureEvent.getGesture().getName());
                     }
                 })
-                .addTimeWarpCalculator(new SlowTimeWarpCalculator(new AbsoluteDistance()))
+                .setTimeWarpCalculator(new SlowTimeWarpCalculator(new AbsoluteDistance()))
                 .build().setStartCompression(true);
 
         gestureManager = new GestureManager(builtDevice);
+
+
+        SensorManager sensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
+        sensorManager.registerListener(new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                textView.setText("Here now");
+                builtDevice.newMeasurement(event.values, System.nanoTime());
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+            }
+        },  sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), SensorManager.SENSOR_DELAY_FASTEST);
     }
 }

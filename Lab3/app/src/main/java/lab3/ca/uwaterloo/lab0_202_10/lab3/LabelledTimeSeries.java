@@ -2,8 +2,6 @@ package lab3.ca.uwaterloo.lab0_202_10.lab3;
 
 import com.wtw.timeseries.TimeSeries;
 
-import lab3.ca.uwaterloo.lab0_202_10.lab3.gesture.Gestures;
-
 public class LabelledTimeSeries extends TimeSeries {
 
     private Gestures type;

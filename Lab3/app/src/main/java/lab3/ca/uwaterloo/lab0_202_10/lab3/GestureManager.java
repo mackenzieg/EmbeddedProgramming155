@@ -7,6 +7,7 @@ import com.wtw.event.events.PostCompressionEvent;
 import com.wtw.event.events.PostTimeWarpEvent;
 import com.wtw.event.events.StartTimeWarpEvent;
 import com.wtw.timeseries.TimeSeries;
+import com.wtw.timeseries.TimeSeriesComparison;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,20 +44,26 @@ public class GestureManager {
             }
 
             @EventHandler
-            public void postTimeWarp(PostTimeWarpEvent postTimeWarpEvent) {
-                if (postTimeWarpEvent.getReference() instanceof LabelledTimeSeries) {
-                    LabelledTimeSeries labelledTimeSeries = (LabelledTimeSeries) postTimeWarpEvent.getReference();
-                    labelledTimeSeries.getType();
-
-                    DetectedGestureEvent detectedGestureEvent = new DetectedGestureEvent(labelledTimeSeries);
-                    builtDevice.getEventBus().post(detectedGestureEvent);
+            public void compare(StartTimeWarpEvent startTimeWarpEvent) {
+                for (LabelledTimeSeries timeSeries : gestures) {
+                    startTimeWarpEvent.addComparison(timeSeries);
                 }
             }
 
             @EventHandler
-            public void compare(StartTimeWarpEvent startTimeWarpEvent) {
-                for (LabelledTimeSeries timeSeries : gestures) {
-                    startTimeWarpEvent.addComparison(timeSeries);
+            public void postTimeWarp(PostTimeWarpEvent postTimeWarpEvent) {
+                float lowestSum = 100000.0f;
+                TimeSeriesComparison lowest = null;
+                for (TimeSeriesComparison timeSeriesComparison : postTimeWarpEvent.getTimeWarpComparisonResults().getResults()) {
+                    if (lowestSum >= timeSeriesComparison.getDistance()) {
+                        lowestSum = timeSeriesComparison.getDistance();
+                        lowest = timeSeriesComparison;
+                    }
+                }
+
+                if (lowest != null && lowest.getReference() instanceof LabelledTimeSeries) {
+                    DetectedGestureEvent event = new DetectedGestureEvent(((LabelledTimeSeries) lowest.getReference()).getType());
+                    builtDevice.getEventBus().post(event);
                 }
             }
         });
