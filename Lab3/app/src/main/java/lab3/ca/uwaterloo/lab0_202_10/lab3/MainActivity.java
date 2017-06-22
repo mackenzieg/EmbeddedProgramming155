@@ -7,6 +7,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,6 +19,8 @@ import com.wtw.distance.AbsoluteDistance;
 import com.wtw.distance.EuclideanDistance;
 import com.wtw.event.Event;
 import com.wtw.event.EventHandler;
+import com.wtw.event.events.PostFilterEvent;
+import com.wtw.event.events.StartFilteringEvent;
 import com.wtw.filters.DifferenceEquivalenceFilter;
 import com.wtw.filters.LowPassFilter;
 import com.wtw.timeseries.TimeSeries;
@@ -72,6 +75,10 @@ public class MainActivity extends AppCompatActivity {
                     public void detectedGesture(DetectedGestureEvent detectedGestureEvent) {
                         textView.setText(detectedGestureEvent.getGesture().getName());
                     }
+                    @EventHandler
+                    public void postFilter(PostFilterEvent postFilterEvent) {
+                        anotherLineGraphView.addPoint(postFilterEvent.getAfter());
+                    }
                 })
                 .setTimeWarpCalculator(new SlowTimeWarpCalculator(new AbsoluteDistance()))
                 .build().setStartCompression(true);
@@ -83,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
         sensorManager.registerListener(new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent event) {
-                textView.setText("Here now");
                 builtDevice.newMeasurement(event.values, System.nanoTime());
             }
 
@@ -91,6 +97,6 @@ public class MainActivity extends AppCompatActivity {
             public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
             }
-        },  sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), SensorManager.SENSOR_DELAY_FASTEST);
+        },  sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), SensorManager.SENSOR_DELAY_UI);
     }
 }
