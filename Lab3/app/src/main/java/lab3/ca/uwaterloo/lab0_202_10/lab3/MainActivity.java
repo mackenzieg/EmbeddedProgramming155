@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         final LineGraphView
                 anotherLineGraphView = new LineGraphView(getApplicationContext(),
-                100,
+                250,
                 Arrays.asList("x", "y", "z"));
 
         final TextView textView = new TextView(this);
@@ -61,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
 
         final BuiltDevice builtDevice = new Device()
                 .addCompressor(new MeanCompressor())
-                .addFilter(new LowPassFilter(3))
-                .addFilter(new DifferenceEquivalenceFilter(3))
+                .addFilter(new LowPassFilter(3, 0.001, 10))
+//                .addFilter(new DifferenceEquivalenceFilter(3))
                 .setGestureDetector(new DefaultGestureDetector(new EuclideanDistance()) {
                     @Override
                     public void newMeasurement(float[] values, long time) {
@@ -85,11 +85,11 @@ public class MainActivity extends AppCompatActivity {
 
         gestureManager = new GestureManager(builtDevice);
 
-
         SensorManager sensorManager = (SensorManager) this.getSystemService(SENSOR_SERVICE);
         sensorManager.registerListener(new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent event) {
+                Log.d("DEBUG", (event.values == null) + "");
                 builtDevice.newMeasurement(event.values, System.nanoTime());
             }
 
@@ -97,6 +97,6 @@ public class MainActivity extends AppCompatActivity {
             public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
             }
-        },  sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), SensorManager.SENSOR_DELAY_UI);
+        },  sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), SensorManager.SENSOR_DELAY_FASTEST);
     }
 }

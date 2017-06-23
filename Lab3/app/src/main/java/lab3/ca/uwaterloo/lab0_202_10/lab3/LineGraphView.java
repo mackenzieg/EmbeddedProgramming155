@@ -24,8 +24,8 @@ public class LineGraphView extends View {
             0xffff00ff,
             0xff00ffff,
     };
-    private final int WIDTH = 600;
-    private final int HEIGHT = 600;
+    private final int WIDTH = 1400;
+    private final int HEIGHT = 800;
     private final int AXIS_WIDTH = 100;
     private final int maxDataWidth;
     private final List<String> labels;
