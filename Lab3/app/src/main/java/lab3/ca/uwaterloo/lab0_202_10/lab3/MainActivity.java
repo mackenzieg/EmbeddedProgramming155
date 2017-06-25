@@ -17,17 +17,14 @@ import com.wtw.compression.MeanCompressor;
 import com.wtw.detectors.DefaultGestureDetector;
 import com.wtw.distance.AbsoluteDistance;
 import com.wtw.distance.EuclideanDistance;
-import com.wtw.event.Event;
 import com.wtw.event.EventHandler;
-import com.wtw.event.events.PostFilterEvent;
-import com.wtw.event.events.StartFilteringEvent;
 import com.wtw.filters.DifferenceEquivalenceFilter;
 import com.wtw.filters.LowPassFilter;
 import com.wtw.timeseries.TimeSeries;
-import com.wtw.timewarp.SlowTimeWarpCalculator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EventListener;
 import java.util.List;
 
 import lab3.ca.uwaterloo.lab0_202_10.lab3.events.DetectedGestureEvent;
@@ -61,26 +58,16 @@ public class MainActivity extends AppCompatActivity {
 
         final BuiltDevice builtDevice = new Device()
                 .addCompressor(new MeanCompressor())
+                .registerListener(new EventListener() {
+                    @EventHandler
+                    public void gesture(DetectedGestureEvent detectedGestureEvent) {
+                        Log.d("DEBUG", "Herre");
+                    }
+                })
                 .addFilter(new LowPassFilter(3, 0.001, 10))
-//                .addFilter(new DifferenceEquivalenceFilter(3))
-                .setGestureDetector(new DefaultGestureDetector(new EuclideanDistance()) {
-                    @Override
-                    public void newMeasurement(float[] values, long time) {
-                        super.newMeasurement(values, time);
-                        anotherLineGraphView.addPoint(values);
-                    }
-                })
-                .registerListener(new Event() {
-                    @EventHandler
-                    public void detectedGesture(DetectedGestureEvent detectedGestureEvent) {
-                        textView.setText(detectedGestureEvent.getGesture().getName());
-                    }
-                    @EventHandler
-                    public void postFilter(PostFilterEvent postFilterEvent) {
-                        anotherLineGraphView.addPoint(postFilterEvent.getAfter());
-                    }
-                })
-                .setTimeWarpCalculator(new SlowTimeWarpCalculator(new AbsoluteDistance()))
+                .addFilter(new DifferenceEquivalenceFilter(3))
+                .setGestureDetector(new DefaultGestureDetector(new EuclideanDistance()))
+                .setTimeWarpCalculator(new SlowTimeWarp(new AbsoluteDistance()))
                 .build().setStartCompression(true);
 
         gestureManager = new GestureManager(builtDevice);
@@ -89,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
         sensorManager.registerListener(new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent event) {
-                Log.d("DEBUG", (event.values == null) + "");
                 builtDevice.newMeasurement(event.values, System.nanoTime());
             }
 

@@ -1,5 +1,7 @@
 package lab3.ca.uwaterloo.lab0_202_10.lab3;
 
+import android.util.Log;
+
 import com.wtw.BuiltDevice;
 import com.wtw.event.EventHandler;
 import com.wtw.event.EventListener;
@@ -32,19 +34,25 @@ public class GestureManager {
         this.builtDevice.getEventBus().register(new EventListener() {
             @EventHandler
             public void getCompressed(PostCompressionEvent postCompressionEvent) {
-                if (gestures.size() >= Gestures.ALL_GESTURES.length) {
-                    if (!startedTimeWarp) {
-                        builtDevice.setStartTimeWarp(true);
+                Log.d("DEBUG", gestures.size() + "");
+                if (!startedTimeWarp) {
+                    gestures.add(new LabelledTimeSeries(postCompressionEvent.getAfter(), Gestures.ALL_GESTURES[gestures.size()]));
+                    if (gestures.size() == Gestures.ALL_GESTURES.length) {
+                        Log.d("DEBUG", "Starting here");
+                        if (!builtDevice.getTimeWarpManager().isStarted()) {
+                            builtDevice.setStartTimeWarp(true);
+                        }
                         startedTimeWarp = true;
                     }
-                } else {
-                    gestures.add(
-                            new LabelledTimeSeries(postCompressionEvent.getAfter(), Gestures.ALL_GESTURES[gestures.size()]));
                 }
             }
 
             @EventHandler
             public void compare(StartTimeWarpEvent startTimeWarpEvent) {
+                if (!startedTimeWarp) {
+                    startTimeWarpEvent.setCancelled(true);
+                    return;
+                }
                 for (LabelledTimeSeries timeSeries : gestures) {
                     startTimeWarpEvent.addComparison(timeSeries);
                 }
@@ -52,6 +60,7 @@ public class GestureManager {
 
             @EventHandler
             public void postTimeWarp(PostTimeWarpEvent postTimeWarpEvent) {
+                Log.d("DEBUG", "Timewarp");
                 float lowestSum = 100000.0f;
                 TimeSeriesComparison lowest = null;
                 for (TimeSeriesComparison timeSeriesComparison : postTimeWarpEvent.getTimeWarpComparisonResults().getResults()) {
