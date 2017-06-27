@@ -2,6 +2,9 @@ package lab3.ca.uwaterloo.lab0_202_10.lab3;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.util.Log;
 import android.view.Choreographer;
 import android.view.View;
 
@@ -20,5 +23,8 @@ public class Block extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        Paint paint = new Paint();
+        paint.setColor(Color.WHITE);
+        canvas.drawRect(0, 0, 100, 100, paint);
     }
 }

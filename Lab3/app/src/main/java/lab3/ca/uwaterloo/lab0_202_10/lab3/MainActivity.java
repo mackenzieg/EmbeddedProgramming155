@@ -36,8 +36,10 @@ public class MainActivity extends AppCompatActivity {
         gestureIndicator.setTextColor(Color.WHITE);
         gestureIndicator.setTextSize(25);
 
+        Block block = new Block(this);
 
         view.addView(gestureIndicator);
+        view.addView(block);
 
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
