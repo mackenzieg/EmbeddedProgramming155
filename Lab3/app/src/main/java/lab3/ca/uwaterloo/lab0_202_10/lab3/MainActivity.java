@@ -9,7 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -36,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         gestureIndicator.setTextColor(Color.WHITE);
         gestureIndicator.setTextSize(25);
 
-        Block block = new Block(this);
+//        Block block = new Block(this);
 
         view.addView(gestureIndicator);
         view.addView(block);
@@ -50,14 +49,14 @@ public class MainActivity extends AppCompatActivity {
         filters.add(new DifferenceEquivalenceFilter());
 
         final List<LabelledGesture> labelledGestures = new ArrayList<>();
-        labelledGestures.add(new LabelledGesture("Up"));
-        labelledGestures.add(new LabelledGesture("Down"));
-        labelledGestures.add(new LabelledGesture("Left"));
-        labelledGestures.add(new LabelledGesture("Right"));
+        labelledGestures.add(new LabelledGesture(Direction.UP));
+        labelledGestures.add(new LabelledGesture(Direction.DOWN));
+        labelledGestures.add(new LabelledGesture(Direction.LEFT));
+        labelledGestures.add(new LabelledGesture(Direction.RIGHT));
 
         final AtomicInteger index = new AtomicInteger(0);
 
-        gestureIndicator.setText("Recording " + labelledGestures.get(index.getAndIncrement()).getLabel());
+        gestureIndicator.setText("Recording " + labelledGestures.get(index.getAndIncrement()).getDirection().getLabel());
 
         // Make gesture manager
         GestureManager gestureManager = new GestureManager(labelledGestures) {
@@ -67,12 +66,14 @@ public class MainActivity extends AppCompatActivity {
                 if (value > labelledGestures.size() - 1) {
                     return;
                 }
-                gestureIndicator.setText("Recording: " + labelledGestures.get(value).getLabel());
+                gestureIndicator.setText("Recording: " + labelledGestures.get(value).getDirection().getLabel());
             }
 
             @Override
             public void caughtRecognizedGesture(LabelledGesture labelledGesture) {
-                gestureIndicator.setText("Detected: " + labelledGesture.getLabel());
+                gestureIndicator.setText("Detected: " + labelledGesture.getDirection().getLabel());
+
+                //TODO Here is the direction of gesture just labelledGesture.getDirection() which return enum
             }
         };
 

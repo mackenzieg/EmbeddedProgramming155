@@ -1,12 +1,14 @@
 package lab3.ca.uwaterloo.lab0_202_10.lab3.gesture;
 
+import lab3.ca.uwaterloo.lab0_202_10.lab3.Direction;
+
 public class LabelledGesture extends Gesture {
 
-    private String label;
+    private Direction direction;
 
-    public LabelledGesture(String label) {
+    public LabelledGesture(Direction direction) {
         super();
-        this.label = label;
+        this.direction = direction;
     }
 
     public void setGesture(Gesture gesture) {
@@ -15,8 +17,8 @@ public class LabelledGesture extends Gesture {
         this.setZ(gesture.getZ());
     }
 
-    public String getLabel() {
-        return label;
+    public Direction getDirection() {
+        return direction;
     }
 
     @Override

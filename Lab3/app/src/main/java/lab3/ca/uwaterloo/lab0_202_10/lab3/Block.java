@@ -10,14 +10,76 @@ import android.view.View;
 
 public class Block extends View {
 
-    private final int WIDTH = 500;
-    private final int HEIGHT = 500;
+    private final int CANVAS_WIDTH = 4*250;
+    private final int CANVAS_HEIGHT = 4*250;
 
-    private int x = 0;
-    private int y = 0;
+    private final int BLOCK_WIDTH = 250;
+    private final int BLOCK_HEIGHT = 250;
 
-    public Block(Context context) {
+    private final int WIDTH = 3*250;
+    private final int HEIGHT = 3*250;
+
+    private int x;
+    private int y;
+
+    private final int MAX_VELOCITY = 5;
+
+    private Direction direction = Direction.NONE;
+
+    public Block(Context context, int x, int y) {
         super(context);
+        this.y = y;
+        this.x = x;
+    }
+
+    public void update() {
+        if (this.direction == Direction.NONE) {
+            return;
+        }
+
+        switch (this.direction) {
+            case UP: {
+                if (y == 0) {
+                    return;
+                }
+
+                this.y -= MAX_VELOCITY;
+
+                break;
+            }
+            case DOWN: {
+                if (y == HEIGHT) {
+                    return;
+                }
+
+                this.y += MAX_VELOCITY;
+                break;
+            }
+            case LEFT: {
+                if (x == WIDTH) {
+                    return;
+                }
+
+                this.x += MAX_VELOCITY;
+                break;
+            }
+            case RIGHT: {
+                if (x == 0) {
+                    return;
+                }
+
+                this.x -= MAX_VELOCITY;
+                break;
+            }
+        }
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
     }
 
     @Override
@@ -25,6 +87,6 @@ public class Block extends View {
         super.onDraw(canvas);
         Paint paint = new Paint();
         paint.setColor(Color.WHITE);
-        canvas.drawRect(0, 0, 100, 100, paint);
+        canvas.drawRect(x, x - BLOCK_WIDTH, x - WIDTH, y, paint);
     }
 }
