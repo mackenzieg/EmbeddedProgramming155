@@ -1,40 +1,41 @@
 package lab3.ca.uwaterloo.lab0_202_10.lab3;
+
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.widget.RelativeLayout;
+
 import java.util.TimerTask;
 
-public class GameLoopTask extends TimerTask{
-    private Activity myActivity;
-    private Context myContext;
-    private RelativeLayout myRL;
+public class GameLoopTask extends TimerTask {
+    private Activity activity;
     private Direction currDirection = Direction.NONE;
 
-    private GameBlock myGameBlock;
+    private Block block;
 
-    public GameLoopTask(Activity myAct, Context myCon, RelativeLayout myRelLay){
-        myActivity=myAct;
-        myContext=myCon;
-        myRL=myRelLay;
-        createBlock();
+    public GameLoopTask(Activity activity, Context context, RelativeLayout layout) {
+        this.activity = activity;
+        // Generate block and add to view
+        this.block = new Block(context, -100, -100);
+        layout.addView(this.block);
     }
+
+    // Loop that will update the block every tick
     @Override
-    public void run(){
-        myActivity.runOnUiThread(
+    public void run() {
+        activity.runOnUiThread(
                 new Runnable() {
                     public void run() {
-                        myGameBlock.move();
+                        block.tick();
                     }
                 }
         );
     }
-    private void createBlock(){
-        GameBlock firstBlock = new GameBlock(myContext, 10, 10);
-        this.myGameBlock = firstBlock;
-        myRL.addView(firstBlock);
-    }
-    public void getDir (Direction nextDir) {
-        this.currDirection = nextDir;
-        myGameBlock.setNewDir(nextDir);
+
+    // Set the direction of the block
+    public void setDirection(Direction dir) {
+        this.currDirection = dir;
+        Log.d("DEBUG", "Moving direction to: " + dir.getLabel());
+        block.setNewDir(dir);
     }
 }

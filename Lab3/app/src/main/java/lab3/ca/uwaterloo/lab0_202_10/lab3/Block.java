@@ -1,92 +1,90 @@
 package lab3.ca.uwaterloo.lab0_202_10.lab3;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.util.Log;
-import android.view.Choreographer;
-import android.view.View;
 
-public class Block extends View {
+public class Block extends android.support.v7.widget.AppCompatImageView {
 
-    private final int CANVAS_WIDTH = 4*250;
-    private final int CANVAS_HEIGHT = 4*250;
+    // Set bounds for block location
+    final float LEFT_BOUND = -100;
+    final float RIGHT_BOUND = 430;
+    final float UPPER_BOUND = -100;
+    final float LOWER_BOUND = 430;
+    // Current block location
+    private float x;
+    private float y;
+    // Current direction
+    private Direction currentDirection = Direction.NONE;
+    // Max velocity
+    private float velocity = 10f;
+    // Max acceleration
+    private float acceleration = 10f;
+    // Size of image
+    private final float IMAGE_SCALE = 0.5f;
 
-    private final int BLOCK_WIDTH = 250;
-    private final int BLOCK_HEIGHT = 250;
-
-    private final int WIDTH = 3*250;
-    private final int HEIGHT = 3*250;
-
-    private int x;
-    private int y;
-
-    private final int MAX_VELOCITY = 5;
-
-    private Direction direction = Direction.NONE;
-
-    public Block(Context context, int x, int y) {
-        super(context);
-        this.y = y;
+    public Block(Context myContext, int x, int y){
+        super(myContext);
+        this.setImageResource(R.drawable.gameblock);
+        this.setScaleX(IMAGE_SCALE);
+        this.setScaleY(IMAGE_SCALE);
         this.x = x;
+        this.y = y;
+        this.setX(x);
+        this.setY(y);
     }
 
-    public void update() {
-        if (this.direction == Direction.NONE) {
-            return;
-        }
+    public void setNewDir(Direction newDir){
+        currentDirection = newDir;
+        velocity = 8;
+    }
 
-        switch (this.direction) {
-            case UP: {
-                if (y == 0) {
-                    return;
+    public void tick() {
+        boolean moving = false;
+        // Make sure block is within bounds
+        if (currentDirection == Direction.LEFT && moving == false) {
+            if (x > LEFT_BOUND) {
+                if (x - velocity < LEFT_BOUND) {
+                    // If moving block puts outside bounds set block location
+                    x = LEFT_BOUND;
+                } else {
+                    // Else move block with velocity
+                    x -= velocity;
                 }
-
-                this.y -= MAX_VELOCITY;
-
-                break;
-            }
-            case DOWN: {
-                if (y == HEIGHT) {
-                    return;
-                }
-
-                this.y += MAX_VELOCITY;
-                break;
-            }
-            case LEFT: {
-                if (x == WIDTH) {
-                    return;
-                }
-
-                this.x += MAX_VELOCITY;
-                break;
-            }
-            case RIGHT: {
-                if (x == 0) {
-                    return;
-                }
-
-                this.x -= MAX_VELOCITY;
-                break;
             }
         }
+        else if (currentDirection == (Direction.RIGHT) && moving == false) {
+            if (x < RIGHT_BOUND) {
+                if (x + velocity > RIGHT_BOUND) {
+                    x = RIGHT_BOUND;
+                } else {
+                    x += velocity;
+                }
+            }
+        }
+        else if (currentDirection == Direction.UP && moving == false) {
+            if (y > UPPER_BOUND) {
+                if (y - velocity < UPPER_BOUND) {
+                    y = UPPER_BOUND;
+                } else {
+                    y -= velocity;
+                }
+            }
+        }
+        else if (currentDirection == Direction.DOWN && moving == false) {
+            if (y < LOWER_BOUND) {
+                if (y + velocity > LOWER_BOUND) {
+                    y = LOWER_BOUND;
+                } else {
+                    y += velocity;
+                }
+            }
+        }
+
+        this.setX(x);
+        this.setY(y);
+
+        // Add some acceleration for smooth look
+        velocity += acceleration;
+
     }
 
-    public Direction getDirection() {
-        return direction;
-    }
-
-    public void setDirection(Direction direction) {
-        this.direction = direction;
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        Paint paint = new Paint();
-        paint.setColor(Color.WHITE);
-        canvas.drawRect(x, x - BLOCK_WIDTH, x - WIDTH, y, paint);
-    }
 }

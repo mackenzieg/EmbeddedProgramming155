@@ -5,6 +5,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         RelativeLayout view = (RelativeLayout) findViewById(R.id.main_layout);
+        LinearLayout buttonBiew = (LinearLayout) findViewById(R.id.buttons);
         view.getLayoutParams().width = GAMEBOARD_DIMENSION;
         view.getLayoutParams().height = GAMEBOARD_DIMENSION;
         view.setBackgroundResource(R.drawable.gameboard);
@@ -64,8 +68,8 @@ public class MainActivity extends AppCompatActivity {
         final AtomicInteger index = new AtomicInteger(0);
 
         final Timer myTimer = new Timer();
-        GameLoopTask myGameLoop = new GameLoopTask(this, getApplicationContext(), view);
-        myTimer.schedule(myGameLoop, 50, 50);
+        final GameLoopTask gameLoop = new GameLoopTask(this, getApplicationContext(), view);
+        myTimer.schedule(gameLoop, 1000, 50);
 
         gestureIndicator.setText("Recording " + labelledGestures.get(index.getAndIncrement()).getDirection().getLabel());
 
@@ -85,15 +89,55 @@ public class MainActivity extends AppCompatActivity {
                 gestureIndicator.setText("Detected: " + labelledGesture.getDirection().getLabel());
 
                 /*final Timer myTimer = new Timer();
-                GameLoopTask myGameLoop = new GameLoopTask(this, getApplicationContext(), view, labelledGesture.getDirection());
+                GameLoopTask myGameLoop = new GameLoopTask(this, getApplicationContext(), view, labelledGesture.setDirection());
                 myTimer.schedule(myGameLoop, 50);*/
-                //tempDirection=labelledGesture.getDirection();
+                //tempDirection=labelledGesture.setDirection();
 
-                myGameLoop.getDir(labelledGesture.getDirection());
+                gameLoop.setDirection(labelledGesture.getDirection());
 
-                //TODO Here is the direction of gesture just labelledGesture.getDirection() which return enum
+                //TODO Here is the direction of gesture just labelledGesture.setDirection() which return enum
             }
         };
+
+        Button upButton = new Button(this);
+        Button downButton = new Button(this);
+        Button leftButton = new Button(this);
+        Button rightButton = new Button(this);
+
+        upButton.setText("Up");
+        downButton.setText("Down");
+        leftButton.setText("Left");
+        rightButton.setText("Right");
+
+        upButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gameLoop.setDirection(Direction.UP);
+            }
+        });
+        downButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gameLoop.setDirection(Direction.DOWN);
+            }
+        });
+        leftButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gameLoop.setDirection(Direction.LEFT);
+            }
+        });
+        rightButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gameLoop.setDirection(Direction.RIGHT);
+            }
+        });
+
+        buttonBiew.addView(upButton);
+        buttonBiew.addView(downButton);
+        buttonBiew.addView(leftButton);
+        buttonBiew.addView(rightButton);
 
         // Generate listerner for after filters
         PostFilterListener gestureListener = new PostFilterListener(gestureManager);
