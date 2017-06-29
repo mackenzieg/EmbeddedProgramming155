@@ -16,7 +16,7 @@ public class GameLoopTask extends TimerTask {
     public GameLoopTask(Activity activity, Context context, RelativeLayout layout) {
         this.activity = activity;
         // Generate block and add to view
-        this.block = new Block(context, -100, -100);
+        this.block = new Block(context, 0, 0);
         layout.addView(this.block);
     }
 

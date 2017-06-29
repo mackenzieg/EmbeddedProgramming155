@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
         RelativeLayout view = (RelativeLayout) findViewById(R.id.main_layout);
         LinearLayout buttonBiew = (LinearLayout) findViewById(R.id.buttons);
+
         view.getLayoutParams().width = GAMEBOARD_DIMENSION;
         view.getLayoutParams().height = GAMEBOARD_DIMENSION;
         view.setBackgroundResource(R.drawable.gameboard);
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        Block block = new Block(this);
 
-        view.addView(gestureIndicator);
+        buttonBiew.addView(gestureIndicator);
  //       view.addView(block);
 
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -69,9 +70,9 @@ public class MainActivity extends AppCompatActivity {
 
         final Timer myTimer = new Timer();
         final GameLoopTask gameLoop = new GameLoopTask(this, getApplicationContext(), view);
-        myTimer.schedule(gameLoop, 1000, 50);
+        myTimer.schedule(gameLoop, 10, 10);
 
-        gestureIndicator.setText("Recording " + labelledGestures.get(index.getAndIncrement()).getDirection().getLabel());
+        gestureIndicator.setText("Recording " + labelledGestures.get(index.getAndIncrement()).getDirection().getLabel() + "\n");
 
         // Make gesture manager
         GestureManager gestureManager = new GestureManager(labelledGestures) {
@@ -81,12 +82,12 @@ public class MainActivity extends AppCompatActivity {
                 if (value > labelledGestures.size() - 1) {
                     return;
                 }
-                gestureIndicator.setText("Recording: " + labelledGestures.get(value).getDirection().getLabel());
+                gestureIndicator.setText("Recording: " + labelledGestures.get(value).getDirection().getLabel() + "\n");
             }
 
             @Override
             public void caughtRecognizedGesture(LabelledGesture labelledGesture) {
-                gestureIndicator.setText("Detected: " + labelledGesture.getDirection().getLabel());
+                gestureIndicator.setText("Detected: " + labelledGesture.getDirection().getLabel() + "\n");
 
                 /*final Timer myTimer = new Timer();
                 GameLoopTask myGameLoop = new GameLoopTask(this, getApplicationContext(), view, labelledGesture.setDirection());
