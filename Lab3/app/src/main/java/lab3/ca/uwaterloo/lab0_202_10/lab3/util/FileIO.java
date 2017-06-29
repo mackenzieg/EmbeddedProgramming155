@@ -1,4 +1,4 @@
-package lab3.ca.uwaterloo.lab0_202_10.lab3.util;
+/*package lab3.ca.uwaterloo.lab0_202_10.lab3.util;
 
 import android.nfc.FormatException;
 
@@ -45,4 +45,4 @@ public class FileIO {
         return gesture;
     }
 
-}
+}*/

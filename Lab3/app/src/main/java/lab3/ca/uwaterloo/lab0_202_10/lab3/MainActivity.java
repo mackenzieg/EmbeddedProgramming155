@@ -5,11 +5,12 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import lab3.ca.uwaterloo.lab0_202_10.lab3.gesture.LabelledGesture;
@@ -23,12 +24,18 @@ import lab3.ca.uwaterloo.lab0_202_10.lab3.gesture.logic.GestureManager;
 
 public class MainActivity extends AppCompatActivity {
 
+    private int GAMEBOARD_DIMENSION = 720;
+    //public Direction tempDirection = Direction.NONE;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        LinearLayout view = (LinearLayout) findViewById(R.id.main_layout);
+        RelativeLayout view = (RelativeLayout) findViewById(R.id.main_layout);
+        view.getLayoutParams().width = GAMEBOARD_DIMENSION;
+        view.getLayoutParams().height = GAMEBOARD_DIMENSION;
+        view.setBackgroundResource(R.drawable.gameboard);
 
         final TextView gestureIndicator = new TextView(this);
 
@@ -38,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 //        Block block = new Block(this);
 
         view.addView(gestureIndicator);
-        view.addView(block);
+ //       view.addView(block);
 
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
@@ -56,6 +63,10 @@ public class MainActivity extends AppCompatActivity {
 
         final AtomicInteger index = new AtomicInteger(0);
 
+        final Timer myTimer = new Timer();
+        GameLoopTask myGameLoop = new GameLoopTask(this, getApplicationContext(), view);
+        myTimer.schedule(myGameLoop, 50, 50);
+
         gestureIndicator.setText("Recording " + labelledGestures.get(index.getAndIncrement()).getDirection().getLabel());
 
         // Make gesture manager
@@ -72,6 +83,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void caughtRecognizedGesture(LabelledGesture labelledGesture) {
                 gestureIndicator.setText("Detected: " + labelledGesture.getDirection().getLabel());
+
+                /*final Timer myTimer = new Timer();
+                GameLoopTask myGameLoop = new GameLoopTask(this, getApplicationContext(), view, labelledGesture.getDirection());
+                myTimer.schedule(myGameLoop, 50);*/
+                //tempDirection=labelledGesture.getDirection();
+
+                myGameLoop.getDir(labelledGesture.getDirection());
 
                 //TODO Here is the direction of gesture just labelledGesture.getDirection() which return enum
             }
