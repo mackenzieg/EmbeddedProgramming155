@@ -5,6 +5,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -77,17 +78,30 @@ public class MainActivity extends AppCompatActivity {
         // Make gesture manager
         GestureManager gestureManager = new GestureManager(labelledGestures) {
             @Override
-            public void caughtReferenceGesture(LabelledGesture labelledGesture) {
-                int value = index.getAndIncrement();
+            public synchronized void caughtReferenceGesture(final LabelledGesture labelledGesture) {
+                final int value = index.getAndIncrement();
                 if (value > labelledGestures.size() - 1) {
                     return;
                 }
-                gestureIndicator.setText("Recording: " + labelledGestures.get(value).getDirection().getLabel() + "\n");
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        gestureIndicator.setText("Recording: " + labelledGestures.get(value).getDirection().getLabel() + "\n");
+
+                    }
+                });
             }
 
             @Override
-            public void caughtRecognizedGesture(LabelledGesture labelledGesture) {
-                gestureIndicator.setText("Detected: " + labelledGesture.getDirection().getLabel() + "\n");
+            public synchronized void caughtRecognizedGesture(final LabelledGesture labelledGesture) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        gestureIndicator.setText("Detected: " + labelledGesture.getDirection().getLabel() + "\n");
+
+                    }
+                });
 
                 /*final Timer myTimer = new Timer();
                 GameLoopTask myGameLoop = new GameLoopTask(this, getApplicationContext(), view, labelledGesture.setDirection());
