@@ -5,6 +5,8 @@ import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
 import android.widget.TextView;
 
+import static lab4.ca.uwaterloo.lab0_202_10.lab4.Locations.*;
+
 public class Block extends AppCompatImageView {
 
     private TextView number;
@@ -13,10 +15,6 @@ public class Block extends AppCompatImageView {
 
     // Set bounds for block location
     // Coords determined from size of phone, make this eventually compute on startup
-    final float LEFT_BOUND = -100;
-    final float RIGHT_BOUND = 450;
-    final float UPPER_BOUND = -100;
-    final float LOWER_BOUND = 450;
     // Current block location
     private float x;
     private float y;
@@ -27,24 +25,20 @@ public class Block extends AppCompatImageView {
     // Max acceleration
     private float acceleration = 1f;
     // Size of image
-    private final float IMAGE_SCALE = 0.5f;
+    private final float IMAGE_SCALE = 0.47f;
 
-    public Block(Context myContext, TextView number, int x, int y, int initialVal){
+    public Block(Context myContext, TextView number, float x, float y, int initialVal){
         super(myContext);
         this.value = initialVal;
         this.number = number;
-        Log.d("DEBUG", this.value + "");
         number.setText(this.value + "");
         this.setImageResource(R.drawable.gameblock);
         this.setScaleX(IMAGE_SCALE);
         this.setScaleY(IMAGE_SCALE);
         this.x = x;
         this.y = y;
-        this.setX(x);
-        this.setY(y);
-        number.setX(x + 50);
-        number.setY(y + 50);
-        number.bringToFront();
+        this.setTextLocation(x, y);
+        setTextLocation(x, y);
     }
 
     public void setNewDir(Direction newDir){
@@ -59,6 +53,7 @@ public class Block extends AppCompatImageView {
                 if (x - velocity < LEFT_BOUND) {
                     // If moving block puts outside bounds set block location
                     x = LEFT_BOUND;
+                    currentDirection = Direction.NONE;
                 } else {
                     // Else move block with velocity
                     x -= velocity;
@@ -69,6 +64,7 @@ public class Block extends AppCompatImageView {
             if (x < RIGHT_BOUND) {
                 if (x + velocity > RIGHT_BOUND) {
                     x = RIGHT_BOUND;
+                    currentDirection = Direction.NONE;
                 } else {
                     x += velocity;
                 }
@@ -78,6 +74,7 @@ public class Block extends AppCompatImageView {
             if (y > UPPER_BOUND) {
                 if (y - velocity < UPPER_BOUND) {
                     y = UPPER_BOUND;
+                    currentDirection = Direction.NONE;
                 } else {
                     y -= velocity;
                 }
@@ -87,6 +84,7 @@ public class Block extends AppCompatImageView {
             if (y < LOWER_BOUND) {
                 if (y + velocity > LOWER_BOUND) {
                     y = LOWER_BOUND;
+                    currentDirection = Direction.NONE;
                 } else {
                     y += velocity;
                 }
@@ -96,9 +94,23 @@ public class Block extends AppCompatImageView {
         this.setX(x);
         this.setY(y);
 
+        setTextLocation(x, y);
+
         // Add some acceleration for smooth look
         velocity += acceleration;
-
     }
 
+    public void setTextLocation(float x, float y) {
+        this.number.setX(x + BLOCK_LENGTH_X * 3 / 2);
+        this.number.setY(y + BLOCK_LENGTH_Y * 3 / 2);
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+        this.number.setText(value + "");
+    }
 }

@@ -7,22 +7,41 @@ import android.util.Log;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.Random;
 import java.util.TimerTask;
 
 public class GameLoopTask extends TimerTask {
     private Activity activity;
     private Direction currDirection = Direction.NONE;
 
-    private Block block;
+    private Random random = new Random();
+
+    private Block[][] blocks = new Block[4][4];
 
     public GameLoopTask(Activity activity, Context context, RelativeLayout layout) {
         this.activity = activity;
-        // Generate block and add to view
-        TextView textView = new TextView(context);
-        textView.setTextColor(Color.RED);
-        this.block = new Block(context, textView, -100, -100, 2);
-        layout.addView(this.block);
-        layout.addView(textView);
+
+        int numGenerate = this.generateRandom(3, 1);
+
+        Log.d("DEBUG", numGenerate + "");
+
+        for (int x = 0; x < 4; ++x) {
+            for (int y = 0; y < 4; ++y) {
+                if (numGenerate != 0 && this.generateRandom(2, 0) == 1) {
+                    --numGenerate;
+                    TextView numberDisplay = new TextView(context);
+                    numberDisplay.setTextColor(Color.RED);
+                    layout.addView(numberDisplay);
+                    blocks[x][y] = new Block(context, numberDisplay,
+                            Locations.getSlotX(x), Locations.getSlotY(y),
+                            this.generateRandom(2, 0) == 1 ? 4 : 2);
+                    layout.addView(blocks[x][y]);
+                    numberDisplay.bringToFront();
+                } else {
+                    blocks[x][y] = null;
+                }
+            }
+        }
     }
 
     // Loop that will update the block every tick
@@ -31,7 +50,12 @@ public class GameLoopTask extends TimerTask {
         activity.runOnUiThread(
                 new Runnable() {
                     public void run() {
-                        block.tick();
+                        for (int x = 0; x < 4; ++x) {
+                            for (int y = 0; y < 4; ++y) {
+                                if (blocks[x][y] != null)
+                                    blocks[x][y].tick();
+                            }
+                        }
                     }
                 }
         );
@@ -40,7 +64,16 @@ public class GameLoopTask extends TimerTask {
     // Set the direction of the block
     public void setDirection(Direction dir) {
         this.currDirection = dir;
-        Log.d("DEBUG", "Moving direction to: " + dir.getLabel());
-        block.setNewDir(dir);
+        for (int x = 0; x < 4; ++x) {
+            for (int y = 0; y < 4; ++y) {
+                if (blocks[x][y] != null)
+                    blocks[x][y].setNewDir(dir);
+            }
+        }
     }
+
+    public int generateRandom(int high, int low) {
+        return this.random.nextInt(high - low) + low;
+    }
+
 }
