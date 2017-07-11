@@ -27,7 +27,7 @@ import lab4.ca.uwaterloo.lab0_202_10.lab4.gesture.logic.GestureManager;
 
 public class MainActivity extends AppCompatActivity {
 
-    private int GAMEBOARD_DIMENSION = 720;
+    private int GAMEBOARD_DIMENSION = 800;
     //public Direction tempDirection = Direction.NONE;
 
     @Override

@@ -1,6 +1,7 @@
 package lab4.ca.uwaterloo.lab0_202_10.lab4;
 
 import android.app.Activity;
+import android.util.Log;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -10,8 +11,8 @@ import java.util.Random;
 import java.util.TimerTask;
 
 public class GameLoopTask extends TimerTask {
+
     private Activity activity;
-    private Direction currDirection = Direction.NONE;
 
     private Random random = new Random();
 
@@ -40,9 +41,8 @@ public class GameLoopTask extends TimerTask {
     }
 
     public void createBlock() {
-        int value = this.generateRandom(2, 1) * 2;
 
-        boolean generate = false;
+        int value = random.nextBoolean() ? 2 : 4;
 
         int available = 0;
         for (int i = 0; i < 4; ++i) {
@@ -53,12 +53,24 @@ public class GameLoopTask extends TimerTask {
             }
         }
 
-        while (!generate) {
-            int x = random.nextInt(4);
-            int y = random.nextInt(4);
+        if (available == 0) {
+            Log.d("Lose", "Lose");
+            return;
+        }
+
+        boolean generated = false;
+
+        while (!generated) {
+            int x = random.nextInt(3);
+            int y = random.nextInt(3);
+
+            Log.d("DEBUG", locationValues[x][y] + "");
+
             if (locationValues[x][y] == 0) {
                 Block block = new Block(this.activity, this, x, y, relativeLayout, value);
+                locationValues[x][y] = value;
                 this.blocks.add(block);
+                generated = true;
             }
         }
     }
@@ -121,12 +133,10 @@ public class GameLoopTask extends TimerTask {
             }
         }
 
-        int x = -1, y = -1, value = -1;
-
         for (int i = 0; i < blocks.size(); ++i) {
-            x = blocks.get(i).getRow();
-            y = blocks.get(i).getColumn();
-            value = blocks.get(i).getValue();
+            int x = blocks.get(i).getRow();
+            int y = blocks.get(i).getColumn();
+            int value = blocks.get(i).getValue();
 
             locationValues[x][y] = value;
         }

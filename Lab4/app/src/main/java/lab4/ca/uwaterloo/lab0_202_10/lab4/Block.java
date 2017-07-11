@@ -2,6 +2,7 @@ package lab4.ca.uwaterloo.lab0_202_10.lab4;
 
 import android.content.Context;
 import android.support.v7.widget.AppCompatImageView;
+import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -42,21 +43,29 @@ public class Block extends AppCompatImageView {
 
     private final RelativeLayout relativeLayout;
 
-    public Block(Context context, GameLoopTask gameLoop, float x, float y, RelativeLayout relativeLayout, int initialVal) {
+    public Block(Context context, GameLoopTask gameLoop, int boardX, int boardY, RelativeLayout relativeLayout, int initialVal) {
         super(context);
         this.value = initialVal;
         this.gameLoop = gameLoop;
         this.number = new TextView(context);
-        relativeLayout.addView(number);
         number.setText(this.value + "");
         this.setImageResource(R.drawable.gameblock);
         this.setScaleX(IMAGE_SCALE);
         this.setScaleY(IMAGE_SCALE);
-        this.x = x;
-        this.y = y;
+        this.number.bringToFront();
+        this.boardX = boardX;
+        this.boardY = boardY;
+
+        this.x = LOCATIONS.getSlotX(boardX);
+
+        this.y = LOCATIONS.getSlotY(boardY);
+
         this.setTextLocation(x, y);
         this.relativeLayout = relativeLayout;
         setTextLocation(x, y);
+
+        relativeLayout.addView(this);
+        relativeLayout.addView(number);
     }
 
     public void setNewDir(Direction newDir) {
@@ -119,8 +128,8 @@ public class Block extends AppCompatImageView {
     }
 
     public void setTextLocation(float x, float y) {
-        this.number.setX(x + LOCATIONS.BLOCK_LENGTH_X * 3 / 2);
-        this.number.setY(y + LOCATIONS.BLOCK_LENGTH_Y * 3 / 2);
+        this.number.setX(x + LOCATIONS.BLOCK_LENGTH_X);
+        this.number.setY(y + LOCATIONS.BLOCK_LENGTH_Y);
     }
 
     public int getValue() {
@@ -232,22 +241,20 @@ public class Block extends AppCompatImageView {
 
     public int getRow() {
         this.updateRow();
-        this.updateColumn();
         return this.boardY;
     }
 
     public int getColumn() {
-        this.updateRow();
         this.updateColumn();
         return this.boardX;
     }
 
     private void updateRow() {
-        this.boardY = (int) ((y - LOCATIONS.LEFT_BOUND) / (LOCATIONS.BLOCK_LENGTH_Y));
+        this.boardY = (int) Math.floor((y - LOCATIONS.LEFT_BOUND) / (LOCATIONS.BLOCK_LENGTH_Y));
     }
 
     private void updateColumn() {
-        this.boardX = (int) ((x - LOCATIONS.LEFT_BOUND) / (LOCATIONS.BLOCK_LENGTH_X));
+        this.boardX = (int) Math.floor((x - LOCATIONS.LEFT_BOUND) / (LOCATIONS.BLOCK_LENGTH_X));
     }
 
     public void destroy() {
