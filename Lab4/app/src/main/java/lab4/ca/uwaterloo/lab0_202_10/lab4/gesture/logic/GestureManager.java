@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import lab4.ca.uwaterloo.lab0_202_10.lab4.Locations;
 import lab4.ca.uwaterloo.lab0_202_10.lab4.gesture.ComparedWaveform;
 import lab4.ca.uwaterloo.lab0_202_10.lab4.gesture.Gesture;
 import lab4.ca.uwaterloo.lab0_202_10.lab4.gesture.LabelledGesture;

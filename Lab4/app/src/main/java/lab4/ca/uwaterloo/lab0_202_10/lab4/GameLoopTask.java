@@ -1,12 +1,11 @@
 package lab4.ca.uwaterloo.lab0_202_10.lab4;
 
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.Color;
-import android.util.Log;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.Toast;
 
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Random;
 import java.util.TimerTask;
 
@@ -16,30 +15,50 @@ public class GameLoopTask extends TimerTask {
 
     private Random random = new Random();
 
-    private Block[][] blocks = new Block[4][4];
+    public LinkedList<Block> blocks = new LinkedList<>();
 
-    public GameLoopTask(Activity activity, Context context, RelativeLayout layout) {
+    public int[][] locationValues = new int[4][4];
+
+    private boolean movementDone = false;
+
+    private RelativeLayout relativeLayout;
+
+    public GameLoopTask(Activity activity, RelativeLayout layout) {
         this.activity = activity;
+        this.relativeLayout = layout;
+        for (int i = 0; i < this.generateRandom(3, 1); ++i) {
+            this.createBlock();
+        }
+    }
 
-        int numGenerate = this.generateRandom(3, 1);
+    public LinkedList<Block> getBlocks() {
+        return blocks;
+    }
 
-        Log.d("DEBUG", numGenerate + "");
+    public int[][] getLocationValues() {
+        return locationValues;
+    }
 
-        for (int x = 0; x < 4; ++x) {
-            for (int y = 0; y < 4; ++y) {
-                if (numGenerate != 0 && this.generateRandom(2, 0) == 1) {
-                    --numGenerate;
-                    TextView numberDisplay = new TextView(context);
-                    numberDisplay.setTextColor(Color.RED);
-                    layout.addView(numberDisplay);
-                    blocks[x][y] = new Block(context, numberDisplay,
-                            Locations.getSlotX(x), Locations.getSlotY(y),
-                            this.generateRandom(2, 0) == 1 ? 4 : 2);
-                    layout.addView(blocks[x][y]);
-                    numberDisplay.bringToFront();
-                } else {
-                    blocks[x][y] = null;
+    public void createBlock() {
+        int value = this.generateRandom(2, 1) * 2;
+
+        boolean generate = false;
+
+        int available = 0;
+        for (int i = 0; i < 4; ++i) {
+            for (int n = 0; n < 4; ++n) {
+                if (locationValues[i][n] == 0) {
+                    ++available;
                 }
+            }
+        }
+
+        while (!generate) {
+            int x = random.nextInt(4);
+            int y = random.nextInt(4);
+            if (locationValues[x][y] == 0) {
+                Block block = new Block(this.activity, this, x, y, relativeLayout, value);
+                this.blocks.add(block);
             }
         }
     }
@@ -50,10 +69,23 @@ public class GameLoopTask extends TimerTask {
         activity.runOnUiThread(
                 new Runnable() {
                     public void run() {
-                        for (int x = 0; x < 4; ++x) {
-                            for (int y = 0; y < 4; ++y) {
-                                if (blocks[x][y] != null)
-                                    blocks[x][y].tick();
+                        movementDone = true;
+                        for (int i = 0; i < blocks.size(); ++i) {
+                            blocks.get(i).tick();
+                            movementDone &= blocks.get(i).isDoneMoving();
+                        }
+
+                        if (movementDone) {
+                            checkOverlaps();
+                            checkLocationValue();
+
+                            Iterator<Block> items = blocks.iterator();
+                            while (items.hasNext()) {
+                                Block block = items.next();
+                                if (block.getValue() == 256) {
+                                    Toast toast = Toast.makeText(activity, "Nice Job Kid!", Toast.LENGTH_LONG);
+                                    toast.show();
+                                }
                             }
                         }
                     }
@@ -61,13 +93,53 @@ public class GameLoopTask extends TimerTask {
         );
     }
 
+    private void deleteBlock(Block block) {
+        block.destroy();
+        for (int i = 0; i < blocks.size(); ++i) {
+            if (blocks.get(i).equals(block)) {
+                blocks.remove(i);
+                return;
+            }
+        }
+    }
+
+    private void checkOverlaps() {
+        for (int i = 0; i < blocks.size(); i++) {
+            for (int j = i + 1; j < blocks.size(); j++) {
+                if (blocks.get(i).samePosition(blocks.get(j))) {
+                    blocks.get(i).doubleValue();
+                    this.deleteBlock(blocks.get(j));
+                }
+            }
+        }
+    }
+
+    private void checkLocationValue() {
+        for (int i = 0; i < 4; i++) {
+            for (int x = 0; x < 4; x++) {
+                locationValues[i][x] = 0;
+            }
+        }
+
+        int x = -1, y = -1, value = -1;
+
+        for (int i = 0; i < blocks.size(); ++i) {
+            x = blocks.get(i).getRow();
+            y = blocks.get(i).getColumn();
+            value = blocks.get(i).getValue();
+
+            locationValues[x][y] = value;
+        }
+    }
+
     // Set the direction of the block
     public void setDirection(Direction dir) {
-        this.currDirection = dir;
-        for (int x = 0; x < 4; ++x) {
-            for (int y = 0; y < 4; ++y) {
-                if (blocks[x][y] != null)
-                    blocks[x][y].setNewDir(dir);
+        if (movementDone) {
+            Iterator<Block> items = blocks.iterator();
+            while (items.hasNext()) {
+                Block block = items.next();
+                block.setNewDir(dir);
+                block.preCalcLocation();
             }
         }
     }

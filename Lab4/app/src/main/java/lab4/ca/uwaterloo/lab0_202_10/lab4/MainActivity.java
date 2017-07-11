@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         final AtomicInteger index = new AtomicInteger(0);
 
         final Timer myTimer = new Timer();
-        final GameLoopTask gameLoop = new GameLoopTask(this, getApplicationContext(), view);
+        final GameLoopTask gameLoop = new GameLoopTask(this, view);
         myTimer.schedule(gameLoop, 10, 10);
 
         gestureIndicator.setText("Recording " + labelledGestures.get(index.getAndIncrement()).getDirection().getLabel() + "\n");
