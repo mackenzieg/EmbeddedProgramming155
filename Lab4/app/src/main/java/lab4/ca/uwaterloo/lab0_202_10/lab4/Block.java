@@ -18,6 +18,11 @@ public class Block extends AppCompatImageView {
     // Current block location
     private float x;
     private float y;
+
+    private int boardX;
+    private int boardY;
+
+
     // Current direction
     private Direction currentDirection = Direction.NONE;
     // Max velocity
@@ -26,6 +31,10 @@ public class Block extends AppCompatImageView {
     private float acceleration = 1f;
     // Size of image
     private final float IMAGE_SCALE = 0.47f;
+
+    private boolean moving = false;
+
+    private float bound = LEFT_BOUND;
 
     public Block(Context myContext, TextView number, float x, float y, int initialVal){
         super(myContext);
@@ -41,12 +50,34 @@ public class Block extends AppCompatImageView {
         setTextLocation(x, y);
     }
 
+    public void updateBoardX() {
+        this.boardX = Locations.getBoardX(this.x);
+    }
+
+    public void updateBoardY() {
+        this.boardY = Locations.getBoardY(this.y);
+    }
+
+    public int getBoardX() {
+        return boardX;
+    }
+
+    public int getBoardY() {
+        return boardY;
+    }
+
     public void setNewDir(Direction newDir){
         currentDirection = newDir;
         velocity = 8;
     }
 
     public void tick() {
+
+        this.updateBoardX();
+        this.updateBoardY();
+
+        Log.d("DEBUG", "(" + this.boardX + "," + this.boardY + ")");
+
         // Make sure block is within bounds
         if (currentDirection == Direction.LEFT) {
             if (x > LEFT_BOUND) {
