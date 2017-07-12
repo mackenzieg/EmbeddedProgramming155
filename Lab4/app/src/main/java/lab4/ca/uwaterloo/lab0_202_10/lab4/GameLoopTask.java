@@ -53,7 +53,9 @@ public class GameLoopTask extends TimerTask {
                 if (blockA.getBoardX() == blockB.getBoardX() &&
                         blockA.getBoardY() == blockB.getBoardY()) {
                     int newValue = blockA.getValue() * 2;
-                    Log.d("DEBUG", newValue + "");
+                    if (newValue >= 512) {
+                        Toast.makeText(activity, "GG You Wun U Gud Boi!", Toast.LENGTH_LONG).show();
+                    }
                     blockA.setValue(newValue);
                     this.destroyBlock(blockB);
                 }
@@ -89,8 +91,8 @@ public class GameLoopTask extends TimerTask {
 
         int value = random.nextBoolean() ? 2 : 4;
 
-        Block block = new Block(activity, relativeLayout, Locations.getSlotX(location.getX()),
-                Locations.getSlotY(location.getY()), value);
+        Block block = new Block(activity, relativeLayout, location.getX(),
+                location.getY(), value);
 
         this.blocks.add(block);
 
@@ -153,26 +155,27 @@ public class GameLoopTask extends TimerTask {
 
         boolean noChanges = true;
 
-        noChanges = false;
+//        noChanges = false;
         switch (dir) {
             case UP: {
-
-//                for (int x = 0; x < 4; ++x) {
-//                    for (int y = 3; y > 0; --y) {
-//                        for (int i = y - 1; i >= 0; --i) {
-//                            if (locationValue[x][y] != 0 && locationValue[x][y] == locationValue[x][i]) {
-//                                Block block = this.getBlockByLocation(x, i);
-//                                block.setBound(Locations.getSlotY(y));
-//                                block.setNewDir(dir);
-//                                locationValue[x][y] *= 2;
-//                            } else if (locationValue[x][y] == 0 && locationValue[x][i] != 0) {
-//                                Block block = this.getBlockByLocation(x, i);
-//                                block.setBound(Locations.getSlotY(y));
-//                                block.setNewDir(dir);
-//                            }
-//                        }
-//                    }
-//                }
+                for (int x = 0; x < 4; ++x) {
+                    for (int y = 0; y < 3; ++y) {
+                        for (int i = y + 1; i < 4; ++i) {
+                            if (locationValue[x][y] != 0 && locationValue[x][y] == locationValue[x][i]) {
+                                Block block = this.getBlockByLocation(x, i);
+                                block.setBound(Locations.getSlotY(y));
+                                block.setNewDir(dir);
+                                locationValue[x][y] *= 2;
+                                noChanges = false;
+                            } else if (locationValue[x][y] != locationValue[x][i] && locationValue[x][i] != 0) {
+                                Block block = this.getBlockByLocation(x, i);
+                                block.setBound(Locations.getSlotY(y));
+                                block.setNewDir(dir);
+                                noChanges = false;
+                            }
+                        }
+                    }
+                }
                 break;
             }
             case DOWN: {
