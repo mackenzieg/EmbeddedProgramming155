@@ -9,12 +9,8 @@ public class Locations {
     public static final float UPPER_BOUND = -105;
     public static final float LOWER_BOUND = 435;
 
-    public static final float BLOCK_LENGTH_X = (RIGHT_BOUND - LEFT_BOUND) / 4;
-    public static final float BLOCK_LENGTH_Y = (LOWER_BOUND - UPPER_BOUND) / 4;
-
-    public static float getSlotX(int x) {
-        return BLOCK_LENGTH_X * (x);
-    }
+    public static final float BLOCK_LENGTH_X = 180f;
+    public static final float BLOCK_LENGTH_Y = 180f;
 
     public static int getBoardX(float x) {
         return (int) (x / BLOCK_LENGTH_X);
@@ -25,7 +21,10 @@ public class Locations {
     }
 
     public static float getSlotY(int y) {
-        return BLOCK_LENGTH_Y * (y);
+        return UPPER_BOUND + BLOCK_LENGTH_Y * (y);
     }
 
+    public static float getSlotX(int x) {
+        return LEFT_BOUND + BLOCK_LENGTH_X * (x);
+    }
 }

@@ -1,15 +1,18 @@
 package lab4.ca.uwaterloo.lab0_202_10.lab4;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
+import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import static lab4.ca.uwaterloo.lab0_202_10.lab4.Locations.*;
 
 public class Block extends AppCompatImageView {
 
-    private TextView number;
+    private TextView numberDisplay;
 
     private int value;
 
@@ -32,22 +35,24 @@ public class Block extends AppCompatImageView {
     // Size of image
     private final float IMAGE_SCALE = 0.47f;
 
-    private boolean moving = false;
-
     private float bound = LEFT_BOUND;
 
-    public Block(Context myContext, TextView number, float x, float y, int initialVal){
-        super(myContext);
+    public Block(Context context, RelativeLayout relativeLayout, float x, float y, int initialVal){
+        super(context);
         this.value = initialVal;
-        this.number = number;
-        number.setText(this.value + "");
+        this.numberDisplay = new TextView(context);
+        numberDisplay.setTextColor(Color.RED);
+        numberDisplay.setText(String.valueOf(initialVal));
         this.setImageResource(R.drawable.gameblock);
         this.setScaleX(IMAGE_SCALE);
         this.setScaleY(IMAGE_SCALE);
         this.x = x;
         this.y = y;
         this.setTextLocation(x, y);
-        setTextLocation(x, y);
+
+        relativeLayout.addView(this);
+        relativeLayout.addView(numberDisplay);
+        numberDisplay.bringToFront();
     }
 
     public void updateBoardX() {
@@ -68,7 +73,14 @@ public class Block extends AppCompatImageView {
 
     public void setNewDir(Direction newDir){
         currentDirection = newDir;
-        velocity = 8;
+    }
+
+    public Direction getCurrentDirection() {
+        return currentDirection;
+    }
+
+    public boolean isMoving() {
+        return this.currentDirection != Direction.NONE;
     }
 
     public void tick() {
@@ -76,15 +88,13 @@ public class Block extends AppCompatImageView {
         this.updateBoardX();
         this.updateBoardY();
 
-        Log.d("DEBUG", "(" + this.boardX + "," + this.boardY + ")");
-
         // Make sure block is within bounds
         if (currentDirection == Direction.LEFT) {
-            if (x > LEFT_BOUND) {
-                if (x - velocity < LEFT_BOUND) {
+            if (x > bound) {
+                if (x - velocity < bound) {
                     // If moving block puts outside bounds set block location
-                    x = LEFT_BOUND;
-                    currentDirection = Direction.NONE;
+                    x = bound;
+                    setNewDir(Direction.NONE);
                 } else {
                     // Else move block with velocity
                     x -= velocity;
@@ -92,10 +102,10 @@ public class Block extends AppCompatImageView {
             }
         }
         else if (currentDirection == Direction.RIGHT) {
-            if (x < RIGHT_BOUND) {
-                if (x + velocity > RIGHT_BOUND) {
-                    x = RIGHT_BOUND;
-                    currentDirection = Direction.NONE;
+            if (x < bound) {
+                if (x + velocity > bound) {
+                    x = bound;
+                    setNewDir(Direction.NONE);
                 } else {
                     x += velocity;
                 }
@@ -103,19 +113,19 @@ public class Block extends AppCompatImageView {
         }
         else if (currentDirection == Direction.UP) {
             if (y > UPPER_BOUND) {
-                if (y - velocity < UPPER_BOUND) {
-                    y = UPPER_BOUND;
-                    currentDirection = Direction.NONE;
+                if (y - velocity < bound) {
+                    y = bound;
+                    setNewDir(Direction.NONE);
                 } else {
                     y -= velocity;
                 }
             }
         }
         else if (currentDirection == Direction.DOWN) {
-            if (y < LOWER_BOUND) {
-                if (y + velocity > LOWER_BOUND) {
-                    y = LOWER_BOUND;
-                    currentDirection = Direction.NONE;
+            if (y < bound) {
+                if (y + velocity > bound) {
+                    y = bound;
+                    setNewDir(Direction.NONE);
                 } else {
                     y += velocity;
                 }
@@ -132,8 +142,8 @@ public class Block extends AppCompatImageView {
     }
 
     public void setTextLocation(float x, float y) {
-        this.number.setX(x + BLOCK_LENGTH_X * 3 / 2);
-        this.number.setY(y + BLOCK_LENGTH_Y * 3 / 2);
+        this.numberDisplay.setX(x + BLOCK_LENGTH_X);
+        this.numberDisplay.setY(y + BLOCK_LENGTH_Y);
     }
 
     public int getValue() {
@@ -142,6 +152,15 @@ public class Block extends AppCompatImageView {
 
     public void setValue(int value) {
         this.value = value;
-        this.number.setText(value + "");
+        this.numberDisplay.setText(String.valueOf(value));
+    }
+
+    public void setBound(float bound) {
+        this.bound = bound;
+    }
+
+    public void destroy() {
+        this.numberDisplay.setVisibility(View.GONE);
+        this.setVisibility(View.GONE);
     }
 }

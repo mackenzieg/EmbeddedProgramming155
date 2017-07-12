@@ -87,7 +87,6 @@ public class GestureManager extends Thread {
     public synchronized void caughtReferenceGesture(LabelledGesture labelledGesture) {}
 
     public synchronized void newGesture(Gesture gesture) {
-
         this.queue.add(gesture);
     }
 
