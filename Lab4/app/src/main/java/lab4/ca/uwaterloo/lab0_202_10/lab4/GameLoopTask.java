@@ -135,10 +135,10 @@ public class GameLoopTask extends TimerTask {
     }
 
     public Block getBlockByLocation(int x, int y) {
-        Log.d("DEBUG", x + "|" + y);
         for (int i = 0; i < blocks.size(); ++i) {
             Block block = blocks.get(i);
-            Log.d("DEBUG", block.getBoardX() + "|" + block.getBoardY());
+            block.updateBoardY();
+            block.updateBoardX();
             if (block.getBoardX() == x && block.getBoardY() == y) {
                 return block;
             }
@@ -155,7 +155,7 @@ public class GameLoopTask extends TimerTask {
 
         boolean noChanges = true;
 
-//        noChanges = false;
+        noChanges = false;
         switch (dir) {
             case UP: {
                 for (int x = 0; x < 4; ++x) {
@@ -166,11 +166,14 @@ public class GameLoopTask extends TimerTask {
                                 block.setBound(Locations.getSlotY(y));
                                 block.setNewDir(dir);
                                 locationValue[x][y] *= 2;
+                                locationValue[x][i] = 0;
                                 noChanges = false;
-                            } else if (locationValue[x][y] != locationValue[x][i] && locationValue[x][i] != 0) {
+                            } else if (locationValue[x][y] == 0 && locationValue[x][i] != 0) {
                                 Block block = this.getBlockByLocation(x, i);
                                 block.setBound(Locations.getSlotY(y));
                                 block.setNewDir(dir);
+                                locationValue[x][y] = locationValue[x][i];
+                                locationValue[x][i] = 0;
                                 noChanges = false;
                             }
                         }
@@ -179,43 +182,81 @@ public class GameLoopTask extends TimerTask {
                 break;
             }
             case DOWN: {
-
+                for (int x = 3; x >= 0; --x) {
+                    for (int y = 3; y >= 1; --y) {
+                        for (int i = y - 1; i >= 0; --i) {
+                            if (locationValue[x][y] != 0 && locationValue[x][y] == locationValue[x][i]) {
+                                Block block = this.getBlockByLocation(x, i);
+                                block.setBound(Locations.getSlotY(y));
+                                block.setNewDir(dir);
+                                locationValue[x][y] *= 2;
+                                locationValue[x][i] = 0;
+                                noChanges = false;
+                            } else if (locationValue[x][y] == 0 && locationValue[x][i] != 0) {
+                                Block block = this.getBlockByLocation(x, i);
+                                block.setBound(Locations.getSlotY(y));
+                                block.setNewDir(dir);
+                                locationValue[x][y] = locationValue[x][i];
+                                locationValue[x][i] = 0;
+                                noChanges = false;
+                            }
+                        }
+                    }
+                }
                 break;
             }
             case LEFT: {
+                for (int y = 0; y < 4; ++y) {
+                    for (int x = 0; x < 3; ++x) {
+                        for (int i = x + 1; i < 4; ++i) {
+                            if (locationValue[x][y] != 0 && locationValue[x][y] == locationValue[i][y]) {
+                                Block block = this.getBlockByLocation(i, y);
+                                block.setBound(Locations.getSlotX(x));
+                                block.setNewDir(dir);
+                                locationValue[x][y] *= 2;
+                                locationValue[i][y] = 0;
+                                noChanges = false;
+                            } else if (locationValue[x][y] == 0 && locationValue[i][y] != 0) {
+                                Block block = this.getBlockByLocation(i, y);
+                                block.setBound(Locations.getSlotX(x));
+                                block.setNewDir(dir);
+                                locationValue[x][y] = locationValue[i][y];
+                                locationValue[i][y] = 0;
+                                noChanges = false;
+                            }
+                        }
+                    }
+                }
                 break;
             }
             case RIGHT: {
+                for (int y = 3; y >= 0; --y) {
+                    for (int x = 3; x >= 1; --x) {
+                        for (int i = x - 1; i >= 0; --i) {
+                            if (locationValue[x][y] != 0 && locationValue[x][y] == locationValue[i][y]) {
+                                Block block = this.getBlockByLocation(i, y);
+                                block.setBound(Locations.getSlotX(x));
+                                block.setNewDir(dir);
+                                locationValue[x][y] *= 2;
+                                locationValue[i][y] = 0;
+                                noChanges = false;
+                            } else if (locationValue[x][y] == 0 && locationValue[i][y] != 0) {
+                                Block block = this.getBlockByLocation(i, y);
+                                block.setBound(Locations.getSlotX(x));
+                                block.setNewDir(dir);
+                                locationValue[x][y] = locationValue[i][y];
+                                locationValue[i][y] = 0;
+                                noChanges = false;
+                            }
+                        }
+                    }
+                }
                 break;
             }
         }
 
         if (!noChanges) {
-            this.currDirection = dir;
-
-            for (Block block : blocks) {
-
-                switch (dir) {
-                    case UP: {
-                        block.setBound(Locations.UPPER_BOUND);
-                        break;
-                    }
-                    case DOWN: {
-                        block.setBound(Locations.LOWER_BOUND);
-                        break;
-                    }
-                    case LEFT: {
-                        block.setBound(Locations.LEFT_BOUND);
-                        break;
-                    }
-                    case RIGHT: {
-                        block.setBound(Locations.RIGHT_BOUND);
-                        break;
-                    }
-                }
-                block.setNewDir(dir);
-                generateBlock = true;
-            }
+            generateBlock = true;
         }
     }
 

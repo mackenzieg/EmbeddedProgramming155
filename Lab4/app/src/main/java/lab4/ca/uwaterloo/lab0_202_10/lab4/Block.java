@@ -93,7 +93,6 @@ public class Block extends AppCompatImageView {
     }
 
     public void tick() {
-
         // Make sure block is within bounds
         if (currentDirection == Direction.LEFT) {
             if (x >= bound) {
