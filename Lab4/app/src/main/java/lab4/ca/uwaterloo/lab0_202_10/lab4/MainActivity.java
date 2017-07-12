@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
         final Timer myTimer = new Timer();
         final GameLoopTask gameLoop = new GameLoopTask(this, getApplicationContext(), view);
-        myTimer.schedule(gameLoop, 10, 10);
+        myTimer.schedule(gameLoop, 30, 40);
 
         gestureIndicator.setText("Recording " + labelledGestures.get(index.getAndIncrement()).getDirection().getLabel() + "\n");
 
@@ -118,11 +118,14 @@ public class MainActivity extends AppCompatActivity {
         Button downButton = new Button(this);
         Button leftButton = new Button(this);
         Button rightButton = new Button(this);
+        Button createBlock = new Button(this);
 
         upButton.setText("Up");
         downButton.setText("Down");
         leftButton.setText("Left");
         rightButton.setText("Right");
+
+        createBlock.setText("Create Block");
 
         upButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,10 +152,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        createBlock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gameLoop.createBlock();
+            }
+        });
+
         buttonBiew.addView(upButton);
         buttonBiew.addView(downButton);
         buttonBiewSecond.addView(leftButton);
         buttonBiewSecond.addView(rightButton);
+        buttonBiewSecond.addView(createBlock);
 
         // Generate listerner for after filters
         PostFilterListener gestureListener = new PostFilterListener(gestureManager);
