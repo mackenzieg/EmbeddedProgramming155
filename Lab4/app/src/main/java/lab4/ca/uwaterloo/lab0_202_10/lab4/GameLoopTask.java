@@ -2,10 +2,8 @@ package lab4.ca.uwaterloo.lab0_202_10.lab4;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.util.Log;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -53,7 +51,7 @@ public class GameLoopTask extends TimerTask {
                 if (blockA.getBoardX() == blockB.getBoardX() &&
                         blockA.getBoardY() == blockB.getBoardY()) {
                     int newValue = blockA.getValue() * 2;
-                    if (newValue >= 512) {
+                    if (newValue >= 128) {
                         Toast.makeText(activity, "GG You Wun U Gud Boi!", Toast.LENGTH_LONG).show();
                     }
                     blockA.setValue(newValue);
@@ -72,6 +70,97 @@ public class GameLoopTask extends TimerTask {
         block.destroy();
     }
 
+    public boolean hasLost() {
+
+        boolean moveExists = false;
+        for (int x = 0; x < 4; ++x) {
+            for (int y = 0; y < 3; ++y) {
+                for (int i = y + 1; i < 4; ++i) {
+                    if (locationValue[x][y] != 0 && locationValue[x][y] == locationValue[x][i]) {
+                        boolean somethingInWay = false;
+                        for (int n = y + 1; n < i; ++n) {
+                            if (locationValue[x][n] != 0 && locationValue[x][n] != locationValue[x][y]) {
+                                somethingInWay = true;
+                            }
+                        }
+                        if (somethingInWay) {
+                            continue;
+                        }
+                        moveExists = true;
+                    } else if (locationValue[x][y] == 0 && locationValue[x][i] != 0) {
+                        moveExists = true;
+                    }
+                }
+            }
+        }
+        for (int x = 3; x >= 0; --x) {
+            for (int y = 3; y >= 1; --y) {
+                for (int i = y - 1; i >= 0; --i) {
+                    if (locationValue[x][y] != 0 && locationValue[x][y] == locationValue[x][i]) {
+                        boolean somethingInWay = false;
+                        for (int n = y - 1; n >= i; --n) {
+                            if (locationValue[x][n] != 0 && locationValue[x][n] != locationValue[x][y]) {
+                                somethingInWay = true;
+                            }
+                        }
+                        if (somethingInWay) {
+                            continue;
+                        }
+
+                        moveExists = true;
+                    } else if (locationValue[x][y] == 0 && locationValue[x][i] != 0) {
+                        moveExists = true;
+                    }
+                }
+            }
+        }
+
+        for (int y = 0; y < 4; ++y) {
+            for (int x = 0; x < 3; ++x) {
+                for (int i = x + 1; i < 4; ++i) {
+                    if (locationValue[x][y] != 0 && locationValue[x][y] == locationValue[i][y]) {
+                        boolean somethingInWay = false;
+                        for (int n = x + 1; n < i; ++n) {
+                            if (locationValue[n][y] != 0 && locationValue[n][y] != locationValue[x][y]) {
+                                somethingInWay = true;
+                            }
+                        }
+                        if (somethingInWay) {
+                            continue;
+                        }
+
+                        moveExists = true;
+                    } else if (locationValue[x][y] == 0 && locationValue[i][y] != 0) {
+                        moveExists = true;
+                    }
+                }
+            }
+        }
+
+        for (int y = 3; y >= 0; --y) {
+            for (int x = 3; x >= 1; --x) {
+                for (int i = x - 1; i >= 0; --i) {
+                    if (locationValue[x][y] != 0 && locationValue[x][y] == locationValue[i][y]) {
+                        boolean somethingInWay = false;
+                        for (int n = x - 1; n >= i; --n) {
+                            if (locationValue[n][y] != 0 && locationValue[n][y] != locationValue[x][y]) {
+                                somethingInWay = true;
+                            }
+                        }
+                        if (somethingInWay) {
+                            continue;
+                        }
+
+                        moveExists = true;
+                    } else if (locationValue[x][y] == 0 && locationValue[i][y] != 0) {
+                        moveExists = true;
+                    }
+                }
+            }
+        }
+        return moveExists;
+    }
+
     public void createBlock() {
         List<XYLocation> openSpots = new ArrayList<>();
         for (int x = 0; x < 4; ++x) {
@@ -82,14 +171,14 @@ public class GameLoopTask extends TimerTask {
             }
         }
 
-        if (openSpots.size() == 0) {
-            Toast.makeText(activity, "Here Lost Maybe?", Toast.LENGTH_LONG).show();
+        if (openSpots.size() == 0 && this.hasLost()) {
+            Toast.makeText(activity, "You LOST wow?", Toast.LENGTH_LONG).show();
             return;
         }
 
         XYLocation location = openSpots.get(this.generateRandom(openSpots.size(), 0));
 
-        int value = random.nextBoolean() ? 2 : 4;
+        int value = this.generateRandom(5, 0) == 2 ? 4 : 2;
 
         Block block = new Block(activity, relativeLayout, location.getX(),
                 location.getY(), value);
@@ -105,7 +194,7 @@ public class GameLoopTask extends TimerTask {
         activity.runOnUiThread(
                 new Runnable() {
                     public void run() {
-                        for(Block block : blocks) {
+                        for (Block block : blocks) {
                             block.tick();
                         }
                         checkDoneMoving();
@@ -154,14 +243,21 @@ public class GameLoopTask extends TimerTask {
         }
 
         boolean noChanges = true;
-
-        noChanges = false;
         switch (dir) {
             case UP: {
                 for (int x = 0; x < 4; ++x) {
                     for (int y = 0; y < 3; ++y) {
                         for (int i = y + 1; i < 4; ++i) {
                             if (locationValue[x][y] != 0 && locationValue[x][y] == locationValue[x][i]) {
+                                boolean somethingInWay = false;
+                                for (int n = y + 1; n < i; ++n) {
+                                    if (locationValue[x][n] != 0 && locationValue[x][n] != locationValue[x][y]) {
+                                        somethingInWay = true;
+                                    }
+                                }
+                                if (somethingInWay) {
+                                    continue;
+                                }
                                 Block block = this.getBlockByLocation(x, i);
                                 block.setBound(Locations.getSlotY(y));
                                 block.setNewDir(dir);
@@ -186,6 +282,17 @@ public class GameLoopTask extends TimerTask {
                     for (int y = 3; y >= 1; --y) {
                         for (int i = y - 1; i >= 0; --i) {
                             if (locationValue[x][y] != 0 && locationValue[x][y] == locationValue[x][i]) {
+                                boolean somethingInWay = false;
+                                for (int n = y - 1; n >= i; --n) {
+                                    if (locationValue[x][n] != 0 && locationValue[x][n] != locationValue[x][y]) {
+                                        somethingInWay = true;
+                                    }
+                                }
+                                if (somethingInWay) {
+                                    continue;
+                                }
+
+
                                 Block block = this.getBlockByLocation(x, i);
                                 block.setBound(Locations.getSlotY(y));
                                 block.setNewDir(dir);
@@ -210,6 +317,16 @@ public class GameLoopTask extends TimerTask {
                     for (int x = 0; x < 3; ++x) {
                         for (int i = x + 1; i < 4; ++i) {
                             if (locationValue[x][y] != 0 && locationValue[x][y] == locationValue[i][y]) {
+                                boolean somethingInWay = false;
+                                for (int n = x + 1; n < i; ++n) {
+                                    if (locationValue[n][y] != 0 && locationValue[n][y] != locationValue[x][y]) {
+                                        somethingInWay = true;
+                                    }
+                                }
+                                if (somethingInWay) {
+                                    continue;
+                                }
+
                                 Block block = this.getBlockByLocation(i, y);
                                 block.setBound(Locations.getSlotX(x));
                                 block.setNewDir(dir);
@@ -234,6 +351,16 @@ public class GameLoopTask extends TimerTask {
                     for (int x = 3; x >= 1; --x) {
                         for (int i = x - 1; i >= 0; --i) {
                             if (locationValue[x][y] != 0 && locationValue[x][y] == locationValue[i][y]) {
+                                boolean somethingInWay = false;
+                                for (int n = x - 1; n >= i; --n) {
+                                    if (locationValue[n][y] != 0 && locationValue[n][y] != locationValue[x][y]) {
+                                        somethingInWay = true;
+                                    }
+                                }
+                                if (somethingInWay) {
+                                    continue;
+                                }
+
                                 Block block = this.getBlockByLocation(i, y);
                                 block.setBound(Locations.getSlotX(x));
                                 block.setNewDir(dir);
