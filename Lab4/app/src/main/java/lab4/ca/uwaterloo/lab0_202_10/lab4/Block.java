@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import static lab4.ca.uwaterloo.lab0_202_10.lab4.Locations.*;
 
-public class Block extends AppCompatImageView {
+public class Block extends GameBlockTemplate {
 
     private TextView numberDisplay;
 
