@@ -12,8 +12,10 @@ import static lab4.ca.uwaterloo.lab0_202_10.lab4.Locations.*;
 
 public class Block extends GameBlockTemplate {
 
+    // TextView to display value
     private TextView numberDisplay;
 
+    // Current value of the block
     private int value;
 
     // Set bounds for block location
@@ -22,6 +24,7 @@ public class Block extends GameBlockTemplate {
     private int x;
     private int y;
 
+    // Coors of the board ex (3,3) and (0,0)
     private int boardX;
     private int boardY;
 
@@ -34,6 +37,7 @@ public class Block extends GameBlockTemplate {
     // Size of image
     private final float IMAGE_SCALE = 0.47f;
 
+    // Current bound to move up to
     private int bound = LEFT_BOUND;
 
     public Block(Context context, RelativeLayout relativeLayout, int x, int y, int initialVal) {
@@ -64,10 +68,12 @@ public class Block extends GameBlockTemplate {
         Log.d("Board Coordinations: ", "(" + boardX + "," + boardY + ")");
     }
 
+    // Recalculated the coords of the block in play
     public void updateBoardX() {
         this.boardX = Locations.getBoardX(this.x);
     }
 
+    // Recalculated the coords of the block in play
     public void updateBoardY() {
         this.boardY = Locations.getBoardY(this.y);
     }
@@ -92,6 +98,7 @@ public class Block extends GameBlockTemplate {
         return this.currentDirection != Direction.NONE;
     }
 
+    // Ticks the block causing updates to its location
     public void tick() {
         // Make sure block is within bounds
         if (currentDirection == Direction.LEFT) {
@@ -145,15 +152,18 @@ public class Block extends GameBlockTemplate {
             }
         }
 
+        // Sets the location of the block
         this.setX(x);
         this.setY(y);
 
+        // Sets the location of the textview to try and stay center
         setTextLocation(x, y);
 
         // Add some acceleration for smooth look
         velocity += acceleration;
     }
 
+    // Calculates the location of the textview
     public void setTextLocation(int x, int y) {
         this.numberDisplay.setX(x + BLOCK_LENGTH_X);
         this.numberDisplay.setY(y + BLOCK_LENGTH_Y);
@@ -163,6 +173,7 @@ public class Block extends GameBlockTemplate {
         return value;
     }
 
+    // Sets the current value and updates the textview to reflect the changes
     public void setValue(int value) {
         this.value = value;
         this.numberDisplay.setText(String.valueOf(value));
@@ -172,6 +183,7 @@ public class Block extends GameBlockTemplate {
         this.bound = bound;
     }
 
+    // Destroys the blocks by letting the garbage collector remove it
     public void destroy() {
         this.numberDisplay.setVisibility(View.GONE);
         this.setVisibility(View.GONE);
