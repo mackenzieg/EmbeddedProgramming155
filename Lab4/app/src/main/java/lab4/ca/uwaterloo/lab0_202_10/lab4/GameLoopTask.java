@@ -20,14 +20,15 @@ public class GameLoopTask extends TimerTask {
 
     private Random random = new Random();
 
+    // RelativeLayout contains game block and board
     private RelativeLayout relativeLayout;
-
+    // LinkedList contains all blocks in play
     private LinkedList<Block> blocks = new LinkedList<>();
-
+    // Array of block locations and values
     private int[][] locationValue = new int[4][4];
-
+    // Determines if a block should be generated on the next tick
     private boolean generateBlock = false;
-
+    // Constructor
     public GameLoopTask(Activity activity, Context context, RelativeLayout layout) {
         this.activity = activity;
         this.relativeLayout = layout;
@@ -43,7 +44,7 @@ public class GameLoopTask extends TimerTask {
             this.createBlock();
         }
     }
-
+    // Checks blocks co-ordinates for overlap, if so, multiply by two, then delete one of the blocks
     public void checkOverlaps() {
         for (int i = 0; i < blocks.size() - 1; ++i) {
             for (int j = i + 1; j < blocks.size(); ++j) {
