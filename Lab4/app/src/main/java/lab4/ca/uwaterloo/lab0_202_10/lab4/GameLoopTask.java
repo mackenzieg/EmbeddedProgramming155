@@ -46,13 +46,16 @@ public class GameLoopTask extends TimerTask {
     }
     // Checks blocks co-ordinates for overlap, if so, multiply by two, then delete one of the blocks
     public void checkOverlaps() {
+        // go through blocks and compare it to every other block
         for (int i = 0; i < blocks.size() - 1; ++i) {
             for (int j = i + 1; j < blocks.size(); ++j) {
                 Block blockA = blocks.get(i);
                 Block blockB = blocks.get(j);
 
+                // Compare the blocks locations with every other
                 if (blockA.getBoardX() == blockB.getBoardX() &&
                         blockA.getBoardY() == blockB.getBoardY()) {
+                    // Get the value and double it, then destroy the other block
                     int newValue = blockA.getValue() * 2;
                     if (newValue >= 512) {
                         Toast.makeText(activity, "GG You Wun U Gud Boi!", Toast.LENGTH_LONG).show();
@@ -64,6 +67,7 @@ public class GameLoopTask extends TimerTask {
         }
     }
 
+    // Removes the block from the array and also removes its view
     public void destroyBlock(Block block) {
         for (int i = 0; i < blocks.size(); ++i) {
             if (block.equals(blocks.get(i))) {
@@ -73,11 +77,13 @@ public class GameLoopTask extends TimerTask {
         block.destroy();
     }
 
+    // Creates a block at a location that doesnt contain any other blocks
     public void createBlock() {
         List<XYLocation> openSpots = new ArrayList<>();
         for (int x = 0; x < 4; ++x) {
             for (int y = 0; y < 4; ++y) {
                 if (locationValue[x][y] == 0) {
+                    // If the location is free add it to the
                     openSpots.add(new XYLocation(x, y));
                 }
             }
